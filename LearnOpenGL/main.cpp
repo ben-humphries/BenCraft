@@ -160,10 +160,15 @@ int main()
 }
 
  const char * loadShader(std::string shaderDir) {
-	 std::ifstream ifs(shaderDir);
-
-	 return std::string((std::istreambuf_iterator<char>(ifs)),
-		 (std::istreambuf_iterator<char>())).c_str();
+	 std::ifstream t;
+	 t.open(shaderDir);
+	 t.seekg(0, std::ios::end);
+	 int length = t.tellg();
+	 t.seekg(0, std::ios::beg);
+	 char * buffer = new char[length];
+	 t.read(buffer, length);
+	 t.close();
+	 return buffer;
 }
 
  void checkShaderCompilation(unsigned int shader) {
