@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 
+#include "Shader.h"
+
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
@@ -66,43 +68,8 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	//load and compile shaders
-
-	const char * vertexShaderSource = loadShader("vertex.glsl");
-	const char * fragShaderSource = loadShader("fragment.glsl");
-
-	//vertex
-
-	unsigned int vertexShader;
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-
-	//check for compile errors
-	checkShaderCompilation(vertexShader);
-
-	//fragment
-	unsigned int fragShader;
-	fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	glShaderSource(fragShader, 1, &fragShaderSource, NULL);
-	glCompileShader(fragShader);
-
-	checkShaderCompilation(fragShader);
-
-	//link shader program
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
-
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragShader);
-	glLinkProgram(shaderProgram);
-
-	//cleanup shader objects after creating shader program
-
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragShader);
+	//Create shader program
+	Shader shader = Shader("vertex.glsl", "fragment.glsl");
 
 	//link vertex attributes, position first, then color
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
@@ -147,7 +114,7 @@ int main()
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glUseProgram(shaderProgram);
+		shader.use();
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
