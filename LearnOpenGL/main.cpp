@@ -32,10 +32,10 @@ int main()
 
 	//initialize vertices
 	float vertices[] = {
-	 0.5f,  0.5f, 0.0f,  // top right
-	 0.5f, -0.5f, 0.0f,  // bottom right
-	-0.5f, -0.5f, 0.0f,  // bottom left
-	-0.5f,  0.5f, 0.0f   // top left 
+	 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // top right
+	 0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,// bottom right
+	-0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,// bottom left
+	-0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 1.0f // top left 
 	};
 	unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 3,   // first triangle
@@ -104,9 +104,11 @@ int main()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragShader);
 
-	//link vertex attributes (in this case, just position)
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	//link vertex attributes, position first, then color
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
 	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 
 
 
