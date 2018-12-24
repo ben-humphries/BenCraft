@@ -1,4 +1,5 @@
 #include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 #include <GL/glew.h>
 
 #include <fstream>
@@ -34,10 +35,11 @@ int main()
 
 	//initialize vertices
 	float vertices[] = {
-	 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // top right
-	 0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,// bottom right
-	-0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,// bottom left
-	-0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 1.0f // top left 
+		//positions			//colors		//tex coords
+	 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,// top right
+	 0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,// bottom right
+	-0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,// bottom left
+	-0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 1.0f, 0.0f, 1.0f // top left 
 	};
 	unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 3,   // first triangle
@@ -72,11 +74,31 @@ int main()
 	Shader shader = Shader("vertex.glsl", "fragment.glsl");
 
 	//link vertex attributes, position first, then color
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3*sizeof(float)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 
+	//texture loading
+	sf::Image img;
+
+	if (!img.loadFromFile("texture.png")) {
+		std::cout << "Error: could not load texture from file" << std::endl;
+	}
+
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getSize().x, img.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.getPixelsPtr());
 
 
 	bool running = true;
@@ -115,6 +137,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shader.use();
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 

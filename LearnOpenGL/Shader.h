@@ -82,8 +82,6 @@ private:
 			std::cout << "ERROR: Shader Compilation failed...\n" << infoLog << std::endl;
 		}
 	}
-
-
 };
 
 #endif
