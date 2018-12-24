@@ -1,28 +1,32 @@
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 
+
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+
 int main()
 {
-	// create the window
-	sf::Window window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Default, sf::ContextSettings(32));
+	//set version of OpenGL
+	sf::ContextSettings settings;
+	settings.majorVersion = 3;
+	settings.minorVersion = 3;
+
+	sf::Window window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "LearnOpenGL", sf::Style::Default, settings);
 	window.setVerticalSyncEnabled(true);
 
-	// activate the window
+	//make the SFML window the current OpenGL context
 	window.setActive(true);
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	// load resources, initialize the OpenGL states, ...
-
-	// run the main loop
 	bool running = true;
 	while (running)
 	{
-		// handle events
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
 			{
-				// end the program
 				running = false;
 			}
 			else if (event.type == sf::Event::Resized)
@@ -32,16 +36,12 @@ int main()
 			}
 		}
 
-		// clear the buffers
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// draw...
-
-		// end the current frame (internally swaps the front and back buffers)
 		window.display();
 	}
 
-	// release resources...
+	window.setActive(false);
 
 	return 0;
 }
