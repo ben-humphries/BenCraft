@@ -106,8 +106,8 @@ int main()
 
 
 	bool running = true;
-
 	bool wireframe = false;
+	sf::Clock clock;
 	while (running)
 	{
 		sf::Event event;
@@ -139,6 +139,13 @@ int main()
 		}
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		//transformation matrix
+		glm::mat4 trans(1);
+		trans = glm::rotate(trans, glm::radians((float) clock.getElapsedTime().asMilliseconds()), glm::vec3(0, 0, 1.0f));
+		trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+
+		shader.setMat4("transform", trans);
 
 		shader.use();
 		glBindTexture(GL_TEXTURE_2D, texture);
