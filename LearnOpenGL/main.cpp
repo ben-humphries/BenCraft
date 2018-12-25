@@ -11,12 +11,14 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Cube.h"
+#include "Camera.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-const char * loadShader(std::string shaderDir);
-void checkShaderCompilation(unsigned int shader);
+void processInput();
+
+Camera camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 
 int main()
@@ -37,6 +39,7 @@ int main()
 	//initialize glew (after setting the OpenGL context)
 	glewExperimental = GL_TRUE;
 	glewInit();
+
 
 	Cube cube1, cube2;
 	cube2.move(glm::vec3(1, 2, -3));
@@ -60,16 +63,6 @@ int main()
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getSize().x, img.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.getPixelsPtr());
 
-
-	//MODEL VIEW PROJECTION MATRICES
-	glm::mat4 model(1);
-	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
-	glm::mat4 view(1);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
-	glm::mat4 projection(1);
-	projection = glm::perspective(glm::radians(45.0f), (float) WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.0f);
 
 	//Enable z-buffer testing
 	glEnable(GL_DEPTH_TEST);
@@ -101,7 +94,7 @@ int main()
 			}
 			else if (event.type == sf::Event::KeyPressed)
 			{
-				if (event.key.code == sf::Keyboard::Space) {
+				if (event.key.code == sf::Keyboard::M) {
 					if (wireframe) {
 						glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 					}
@@ -117,16 +110,16 @@ int main()
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		processInput();
 
-		model = glm::rotate(model, glm::radians(-55.0f * clock.getElapsedTime().asSeconds()), glm::vec3(1.0f, 0.5f, 0.3f));
 
 		cube1.rotate(-55.0f * clock.getElapsedTime().asSeconds(), glm::vec3(1.0f, 0.5f, 0.3));
 		cube2.rotate(-100.0f * clock.getElapsedTime().asSeconds(), glm::vec3(1.0f, 0.5f, 0.3));
 
 		clock.restart();
 
-		cube1.render(view, projection);
-		cube2.render(view, projection);
+		cube1.render(camera);
+		cube2.render(camera);
 
 		window.display();
 	}
@@ -136,25 +129,29 @@ int main()
 	return 0;
 }
 
- const char * loadShader(std::string shaderDir) {
-	 std::ifstream t;
-	 t.open(shaderDir);
-	 t.seekg(0, std::ios::end);
-	 int length = t.tellg();
-	 t.seekg(0, std::ios::beg);
-	 char * buffer = new char[length];
-	 t.read(buffer, length);
-	 t.close();
-	 return buffer;
+
+void processInput() {
+
+	glm::vec3 tomove = glm::vec3();
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		tomove.z += 1;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		tomove.x -= 1;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		tomove.z -= 1;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		tomove.x += 1;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		tomove.y += 1;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+		tomove.y -= 1;
+	}
+
+	camera.move(tomove);
 }
-
- void checkShaderCompilation(unsigned int shader) {
-	 int success;
-	 glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-
-	 if (!success) {
-		 char infoLog[512];
-		 glGetShaderInfoLog(shader, 512, NULL, infoLog);
-		 std::cout << "ERROR: Shader Compilation failed...\n" << infoLog << std::endl;
-	 }
- }

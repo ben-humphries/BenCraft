@@ -10,6 +10,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.h"
+#include "Camera.h"
 
 class Cube {
 public:
@@ -39,9 +40,9 @@ public:
 
 	}
 
-	void render(glm::mat4 view, glm::mat4 projection) {
+	void render(Camera &cam) {
 		glm::mat4 trans(1);
-		trans = projection * view * model;
+		trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;
 		shader.setMat4("transform", trans);
 		shader.use();
 
