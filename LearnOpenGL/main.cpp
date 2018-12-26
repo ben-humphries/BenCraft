@@ -42,7 +42,7 @@ int main()
 
 
 	Cube cube1, cube2;
-	cube2.move(glm::vec3(1, 2, -3));
+	cube2.move(glm::vec3(1, 2, 3));
 
 	//texture loading
 	sf::Image img;
@@ -129,29 +129,30 @@ int main()
 	return 0;
 }
 
+sf::Vector2i lastPos = sf::Mouse::getPosition();
 
 void processInput() {
 
-	glm::vec3 tomove = glm::vec3();
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		tomove.z += 1;
+		camera.fpKeyboardMove(FORWARD);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		tomove.x -= 1;
+		camera.fpKeyboardMove(LEFT);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		tomove.z -= 1;
+		camera.fpKeyboardMove(BACKWARD);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		tomove.x += 1;
+		camera.fpKeyboardMove(RIGHT);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		tomove.y += 1;
+		camera.fpKeyboardMove(UP);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-		tomove.y -= 1;
+		camera.fpKeyboardMove(DOWN);
 	}
 
-	camera.move(tomove);
+	sf::Vector2i currentPos = sf::Mouse::getPosition();
+	camera.fpMouseMove(currentPos.x - lastPos.x, -(currentPos.y - lastPos.y));
+	lastPos = currentPos;
 }

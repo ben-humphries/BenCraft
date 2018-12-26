@@ -9,6 +9,19 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+enum MoveCamera {
+	FORWARD,
+	BACKWARD,
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN
+};
+
+
+const float MOUSE_SENSITIVITY = 0.1f;
+const float MOVEMENT_SPEED = 0.05f;
+
 
 class Camera
 {
@@ -19,19 +32,16 @@ public:
 	glm::mat4 getViewMatrix();
 	glm::mat4 getProjectionMatrix();
 
-	void setViewMatrix(glm::mat4 viewMatrix);
 	void setProjectionMatrix(glm::mat4 projectionMatrix);
 
-	void lookAt(glm::vec3 target);
-
-	//first person movement
 	void move(glm::vec3 tomove);
 
+	void fpKeyboardMove(MoveCamera direction);
+	void fpMouseMove(float dx, float dy, bool constrainPitch = true);
 
 
 private:
 
-	glm::mat4 view = glm::mat4(1);
 	glm::mat4 projection = glm::mat4(1);
 
 	float windowWidth, windowHeight;
@@ -39,6 +49,11 @@ private:
 	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -3.0f);
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+	float yaw = 90.0f;
+	float pitch = 0.0f;
+
+	void updateCameraAttributes();
 };
 
 #endif
