@@ -18,8 +18,10 @@
 
 void processInput();
 
+sf::Window window;
 Camera camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 
+bool gameFocused = true;
 
 int main()
 {
@@ -29,8 +31,9 @@ int main()
 	settings.majorVersion = 3;
 	settings.minorVersion = 3;
 
-	sf::Window window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "LearnOpenGL", sf::Style::Default, settings);
+	window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "LearnOpenGL", sf::Style::Default, settings);
 	window.setVerticalSyncEnabled(true);
+	window.setMouseCursorVisible(false);
 
 	//make the SFML window the current OpenGL context
 	window.setActive(true);
@@ -105,13 +108,19 @@ int main()
 					wireframe = !wireframe;
 					std::cout << "Toggled wireframe... wireframe enabled: " << wireframe << std::endl;
 				}
+				else if (event.key.code == sf::Keyboard::Escape) {
+					gameFocused = !gameFocused;
+					window.setMouseCursorVisible(!gameFocused);
+
+				}
 			}
 		}
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		processInput();
-
+		if (gameFocused) {
+			processInput();
+		}
 
 		cube1.rotate(-55.0f * clock.getElapsedTime().asSeconds(), glm::vec3(1.0f, 0.5f, 0.3));
 		cube2.rotate(-100.0f * clock.getElapsedTime().asSeconds(), glm::vec3(1.0f, 0.5f, 0.3));
@@ -129,7 +138,6 @@ int main()
 	return 0;
 }
 
-sf::Vector2i lastPos = sf::Mouse::getPosition();
 
 void processInput() {
 
@@ -152,7 +160,11 @@ void processInput() {
 		camera.fpKeyboardMove(DOWN);
 	}
 
-	sf::Vector2i currentPos = sf::Mouse::getPosition();
-	camera.fpMouseMove(currentPos.x - lastPos.x, -(currentPos.y - lastPos.y));
-	lastPos = currentPos;
+	//to fix beginning offset, set mouse position to centerScreen on init
+	sf::Vector2i windowPos = window.getPosition();
+	sf::Vector2i centerScreen = sf::Vector2i(windowPos.x + WINDOW_WIDTH / 2, windowPos.y + WINDOW_HEIGHT / 2);
+
+	sf::Vector2i currentPos = sf::Mouse::getPosition() - centerScreen;
+	camera.fpMouseMove(currentPos.x, -currentPos.y);
+	sf::Mouse::setPosition(centerScreen);
 }
