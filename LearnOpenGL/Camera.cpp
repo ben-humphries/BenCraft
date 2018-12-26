@@ -63,7 +63,7 @@ void Camera::fpKeyboardMove(MoveCamera direction)
 
 void Camera::fpMouseMove(float dx, float dy, bool constrainPitch)
 {
-	yaw += dx * MOUSE_SENSITIVITY;
+	yaw = glm::mod(yaw + dx * MOUSE_SENSITIVITY, 360.0f);
 	pitch += dy * MOUSE_SENSITIVITY;
 
 
