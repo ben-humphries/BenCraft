@@ -8,9 +8,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include "Shader.h"
 #include "Camera.h"
+
 
 class Cube {
 public:
@@ -41,12 +43,12 @@ public:
 	}
 
 	void render(Camera &cam) {
-		glm::mat4 trans(1);
-		trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;
+		glBindVertexArray(vao);
+
+		glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;
 		shader.setMat4("transform", trans);
 		shader.use();
 
-		glBindVertexArray(vao);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 
@@ -54,8 +56,17 @@ public:
 		model = glm::translate(model, tomove);
 	}
 
+	void setPosition(glm::vec3 pos) {
+		model = glm::mat4(1); //change to translate to -currentPos to keep rotation
+		model = glm::translate(model, pos);
+	}
+
 	void rotate(float degrees, glm::vec3 axis) {
 		model = glm::rotate(model, glm::radians(degrees), axis);
+	}
+
+	glm::mat4 getModel() {
+		return model;
 	}
 
 private:

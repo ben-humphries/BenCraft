@@ -10,15 +10,19 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#define GLM_ENABLE_EXPERIMENTAL
+
+
 #include "Cube.h"
 #include "Camera.h"
+
+
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
 void processInput();
 
-sf::Window window;
 Camera camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 bool gameFocused = true;
@@ -27,9 +31,12 @@ int main()
 {
 	//set version of OpenGL
 	sf::ContextSettings settings;
-	settings.depthBits = 24;
+	settings.depthBits = 32;
 	settings.majorVersion = 3;
 	settings.minorVersion = 3;
+
+	sf::Window window;
+
 
 	window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "LearnOpenGL", sf::Style::Default, settings);
 	window.setVerticalSyncEnabled(true);
@@ -44,8 +51,9 @@ int main()
 	glewInit();
 
 
-	Cube cube1, cube2;
-	cube2.move(glm::vec3(1, 2, 3));
+	Cube cube1;
+	Cube cube2;
+	cube2.move(glm::vec3(1, 0, 0));
 
 	//texture loading
 	sf::Image img;
@@ -74,7 +82,7 @@ int main()
 
 	//Enable alpha blending
 	//glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glClearColor(0.0f, 0.3f, 0.8f, 1.0f);
 
@@ -122,13 +130,15 @@ int main()
 			processInput();
 		}
 
-		cube1.rotate(-55.0f * clock.getElapsedTime().asSeconds(), glm::vec3(1.0f, 0.5f, 0.3));
-		cube2.rotate(-100.0f * clock.getElapsedTime().asSeconds(), glm::vec3(1.0f, 0.5f, 0.3));
-
 		clock.restart();
 
+		glBindTexture(GL_TEXTURE_2D, 0);
 		cube1.render(camera);
+		glBindTexture(GL_TEXTURE_2D, texture);
 		cube2.render(camera);
+
+
+
 
 		window.display();
 	}
@@ -161,10 +171,10 @@ void processInput() {
 	}
 
 	//to fix beginning offset, set mouse position to centerScreen on init
-	sf::Vector2i windowPos = window.getPosition();
-	sf::Vector2i centerScreen = sf::Vector2i(windowPos.x + WINDOW_WIDTH / 2, windowPos.y + WINDOW_HEIGHT / 2);
+	//sf::Vector2i windowPos = window.getPosition();
+	//sf::Vector2i centerScreen = sf::Vector2i(windowPos.x + WINDOW_WIDTH / 2, windowPos.y + WINDOW_HEIGHT / 2);
 
-	sf::Vector2i currentPos = sf::Mouse::getPosition() - centerScreen;
-	camera.fpMouseMove(currentPos.x, -currentPos.y);
-	sf::Mouse::setPosition(centerScreen);
+	//sf::Vector2i currentPos = sf::Mouse::getPosition() - centerScreen;
+	//camera.fpMouseMove(currentPos.x, -currentPos.y);
+	//sf::Mouse::setPosition(centerScreen);
 }

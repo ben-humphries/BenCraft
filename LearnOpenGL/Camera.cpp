@@ -5,7 +5,7 @@ Camera::Camera(float windowWidth, float windowHeight)
 	this->windowWidth = windowWidth;
 	this->windowHeight = windowHeight;
 
-	projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(45.0f), windowWidth / windowHeight, 0.1f, 100.0f);
 
 	updateCameraAttributes();
 }
