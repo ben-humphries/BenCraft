@@ -13,6 +13,9 @@
 #include "Shader.h"
 #include "Camera.h"
 
+static unsigned int vao;
+static Shader shader;
+bool shaderInitialized = false;
 
 class Cube {
 public:
@@ -20,7 +23,13 @@ public:
 
 	Cube() {
 
-		glGenVertexArrays(1, &vao);
+		if (!shaderInitialized) {
+			shader = Shader("vertex.glsl", "fragment.glsl");
+			shaderInitialized = true;
+		}
+
+		if(vao == 0)
+			glGenVertexArrays(1, &vao);
 
 		glBindVertexArray(vao);
 
@@ -72,9 +81,6 @@ public:
 private:
 
 	glm::mat4 model = glm::mat4(1);
-	Shader shader = Shader("vertex.glsl", "fragment.glsl");
-
-	unsigned int vao;
 
 	const float vertices[180] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,

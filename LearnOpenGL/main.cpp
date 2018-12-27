@@ -17,11 +17,10 @@
 #include "Camera.h"
 
 
-
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-void processInput();
+void processInput(sf::Window &window);
 
 Camera camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -127,7 +126,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if (gameFocused) {
-			processInput();
+			processInput(window);
 		}
 
 		clock.restart();
@@ -136,8 +135,6 @@ int main()
 		cube1.render(camera);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		cube2.render(camera);
-
-
 
 
 		window.display();
@@ -149,7 +146,7 @@ int main()
 }
 
 
-void processInput() {
+void processInput(sf::Window &window) {
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 		camera.fpKeyboardMove(FORWARD);
@@ -171,10 +168,10 @@ void processInput() {
 	}
 
 	//to fix beginning offset, set mouse position to centerScreen on init
-	//sf::Vector2i windowPos = window.getPosition();
-	//sf::Vector2i centerScreen = sf::Vector2i(windowPos.x + WINDOW_WIDTH / 2, windowPos.y + WINDOW_HEIGHT / 2);
+	sf::Vector2i windowPos = window.getPosition();
+	sf::Vector2i centerScreen = sf::Vector2i(windowPos.x + WINDOW_WIDTH / 2, windowPos.y + WINDOW_HEIGHT / 2);
 
-	//sf::Vector2i currentPos = sf::Mouse::getPosition() - centerScreen;
-	//camera.fpMouseMove(currentPos.x, -currentPos.y);
-	//sf::Mouse::setPosition(centerScreen);
+	sf::Vector2i currentPos = sf::Mouse::getPosition() - centerScreen;
+	camera.fpMouseMove(currentPos.x, -currentPos.y);
+	sf::Mouse::setPosition(centerScreen);
 }
