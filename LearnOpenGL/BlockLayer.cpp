@@ -88,7 +88,7 @@ void BlockLayer::generateMesh()
 			int r_z = (i + 1) / LAYER_SIZE;
 
 			if (renderCurrent) addToMesh(blocks[i].rightFace, blocks[i].textureCoords, x, z);
-			addToMesh(blocks[r_i].leftFace, blocks[r_i].textureCoords, r_x, r_z);
+			if (blocks[r_i].opaque) addToMesh(blocks[r_i].leftFace, blocks[r_i].textureCoords, r_x, r_z);
 			
 			/*if (i + 1 % LAYER_SIZE == 0) {
 				printf("here");
@@ -102,7 +102,7 @@ void BlockLayer::generateMesh()
 			int b_z = (i + LAYER_SIZE) / LAYER_SIZE;
 
 			if (renderCurrent) addToMesh(blocks[i].backFace, blocks[i].textureCoords, x, z);
-			addToMesh(blocks[b_i].frontFace, blocks[b_i].textureCoords, b_x, b_z);
+			if (blocks[b_i].opaque) addToMesh(blocks[b_i].frontFace, blocks[b_i].textureCoords, b_x, b_z);
 		}
 
 
