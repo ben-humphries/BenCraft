@@ -40,7 +40,7 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		//copy vertices data to vbo
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
 
 
 		//link vertex attributes, position first, then color
@@ -82,7 +82,7 @@ private:
 
 	glm::mat4 model = glm::mat4(1);
 
-	const float vertices[180] = {
+	std::vector<float> vertices = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
 	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,

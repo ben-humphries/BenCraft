@@ -30,7 +30,7 @@ int main()
 {
 	//set version of OpenGL
 	sf::ContextSettings settings;
-	settings.depthBits = 32;
+	settings.depthBits = 24;
 	settings.majorVersion = 3;
 	settings.minorVersion = 3;
 
@@ -50,9 +50,13 @@ int main()
 	glewInit();
 
 
-	Cube cube1;
-	Cube cube2;
-	cube2.move(glm::vec3(1, 0, 0));
+	std::vector<Cube> cubes;
+
+	for (int i = 0; i < 100; i++) {
+		Cube c;
+		c.move(glm::vec3(i % 10, 0, i / 10));
+		cubes.push_back(c);
+	}
 
 	//texture loading
 	sf::Image img;
@@ -131,10 +135,11 @@ int main()
 
 		clock.restart();
 
-		glBindTexture(GL_TEXTURE_2D, 0);
-		cube1.render(camera);
 		glBindTexture(GL_TEXTURE_2D, texture);
-		cube2.render(camera);
+
+		for (int i = 0; i < 100; i++) {
+			cubes.at(i).render(camera);
+		}
 
 
 		window.display();
