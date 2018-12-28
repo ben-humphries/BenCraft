@@ -49,29 +49,45 @@ void BlockLayer::generateMesh()
 {
 
 
-	for (int i = 0; i < LAYER_SIZE*LAYER_SIZE - LAYER_SIZE; i++) {
-		/*if (i == 0) {
-			addToMesh(blocks[i][j].rightFace, blocks[i][j].textureCoords, i, j);
-		}
-		if (j == 0) {
-			addToMesh(blocks[i][j].frontFace, blocks[i][j].textureCoords, i, j);
-		}*/
-
+	for (int i = 0; i < LAYER_SIZE*LAYER_SIZE; i++) {
+		
+		bool checkRight = true;
+		bool checkBehind = true;
+		
 		int x = i % LAYER_SIZE;
 		int z = i / LAYER_SIZE;
 
 		int r_i = i + 1;
 		int b_i = i + LAYER_SIZE;
 
-		if (!blocks[i + 1].opaque) { //block to the right
+		if (i >= LAYER_SIZE*LAYER_SIZE - LAYER_SIZE) {
+			addToMesh(blocks[i].backFace, blocks[i].textureCoords, x, z);
+			checkBehind = false;
+
+			if (i == LAYER_SIZE * LAYER_SIZE - 1) {
+				checkRight = false;
+			}
+		}
+
+		if ((i + 1) % LAYER_SIZE == 0) { //edge
+			addToMesh(blocks[i].leftFace, blocks[i].textureCoords, x, z);
+		}
+		
+		if (checkRight && (!blocks[i + 1].opaque)) { //block to the right
 			int r_x = i + 1 % LAYER_SIZE;
 			int r_z = i + 1 / LAYER_SIZE;
 
 			addToMesh(blocks[i].rightFace, blocks[i].textureCoords, x, z);
 			addToMesh(blocks[r_i].leftFace, blocks[r_i].textureCoords, r_x, r_z);
+			
+			/*if (i + 1 % LAYER_SIZE == 0) {
+				printf("here");
+				addToMesh(blocks[i].leftFace, blocks[i].textureCoords, x, z);
+			}*/
 		}
 
-		if (!blocks[i + LAYER_SIZE].opaque) { //block behind
+
+		if (checkBehind && !blocks[i + LAYER_SIZE].opaque) { //block behind
 			int b_x = i + LAYER_SIZE % LAYER_SIZE;
 			int b_z = i + LAYER_SIZE / LAYER_SIZE;
 
