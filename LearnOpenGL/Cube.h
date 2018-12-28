@@ -8,14 +8,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/string_cast.hpp>
 
 #include "Shader.h"
 #include "Camera.h"
 
-static unsigned int vao;
-static Shader shader;
-bool shaderInitialized = false;
+static unsigned int vao1;
+static Shader shader1;
+bool shaderInitialized1 = false;
 
 class Cube {
 public:
@@ -23,15 +22,15 @@ public:
 
 	Cube() {
 
-		if (!shaderInitialized) {
-			shader = Shader("vertex.glsl", "fragment.glsl");
-			shaderInitialized = true;
+		if (!shaderInitialized1) {
+			shader1 = Shader("vertex.glsl", "fragment.glsl");
+			shaderInitialized1 = true;
 		}
 
-		if(vao == 0)
-			glGenVertexArrays(1, &vao);
+		if(vao1 == 0)
+			glGenVertexArrays(1, &vao1);
 
-		glBindVertexArray(vao);
+		glBindVertexArray(vao1);
 
 		//initialize vertex buffer object
 		unsigned int vbo;
@@ -52,11 +51,11 @@ public:
 	}
 
 	void render(Camera &cam) {
-		glBindVertexArray(vao);
+		glBindVertexArray(vao1);
 
 		glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;
-		shader.setMat4("transform", trans);
-		shader.use();
+		shader1.setMat4("transform", trans);
+		shader1.use();
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
@@ -88,42 +87,42 @@ private:
 	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, //front face
 
 	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
 	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
 	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
 	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, //back face
 
 	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, //right face
 
 	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, //left face
 
 	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
 	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
 	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
 	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, //bottom face
 
 	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
 	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f //top face
 	};
 };
 #endif

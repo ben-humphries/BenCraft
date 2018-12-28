@@ -12,9 +12,8 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 
-
-#include "Cube.h"
 #include "Camera.h"
+#include "BlockLayer.h"
 
 
 #define WINDOW_WIDTH 800
@@ -49,14 +48,8 @@ int main()
 	glewExperimental = GL_TRUE;
 	glewInit();
 
+	BlockLayer layer;
 
-	std::vector<Cube> cubes;
-
-	for (int i = 0; i < 100; i++) {
-		Cube c;
-		c.move(glm::vec3(i % 10, 0, i / 10));
-		cubes.push_back(c);
-	}
 
 	//texture loading
 	sf::Image img;
@@ -137,9 +130,7 @@ int main()
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 
-		for (int i = 0; i < 100; i++) {
-			cubes.at(i).render(camera);
-		}
+		layer.render(camera);
 
 
 		window.display();
