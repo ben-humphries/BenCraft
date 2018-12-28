@@ -6,6 +6,11 @@ bool shaderInitialized = false;
 
 BlockLayer::BlockLayer()
 {
+
+	for (int i = 0; i < LAYER_SIZE*LAYER_SIZE; i++) {
+			blocks.push_back(Block());
+			blocks[i].opaque = true;
+	}
 	generateMesh();
 
 	if (!shaderInitialized) {
@@ -44,22 +49,37 @@ void BlockLayer::generateMesh()
 {
 
 
-	for (int i = 0; i < LAYER_SIZE - 1; i++) {
-		for (int j = 0; j < LAYER_SIZE - 1; j++) {
-			if (blocks[i + 1][j].opaque) { //check block to the right
-				addToMesh(blocks[i][j].rightFace, blocks[i][j].textureCoords, i, j);
-				addToMesh(blocks[i+1][j].leftFace, blocks[i][j].textureCoords, i+1, j);
-			}
-			if (blocks[i][j + 1].opaque) { //check block behind
-				addToMesh(blocks[i][j].backFace, blocks[i][j].textureCoords, i, j);
-				addToMesh(blocks[i][j+1].frontFace, blocks[i][j].textureCoords, i, j+1);
-
-			}
-
-			addToMesh(blocks[i][j].topFace, blocks[i][j].textureCoords, i, j);
-			addToMesh(blocks[i][j].bottomFace, blocks[i][j].textureCoords, i, j);
+	for (int i = 0; i < LAYER_SIZE*LAYER_SIZE - LAYER_SIZE; i++) {
+		/*if (i == 0) {
+			addToMesh(blocks[i][j].rightFace, blocks[i][j].textureCoords, i, j);
 		}
+		if (j == 0) {
+			addToMesh(blocks[i][j].frontFace, blocks[i][j].textureCoords, i, j);
+		}*/
+
+		printf("%i", i);
+		if (!blocks[i + 1].opaque) { //block to the right
+			addToMesh(blocks[i].rightFace, blocks[i].textureCoords, i % LAYER_SIZE, i / LAYER_SIZE);
+			addToMesh(blocks[i + 1].leftFace, blocks[i + 1].textureCoords, i + 1 % LAYER_SIZE, i + 1 / LAYER_SIZE);
+		}
+
+		if (!blocks[i + LAYER_SIZE].opaque) { //block behind
+			addToMesh(blocks[i].backFace, blocks[i].textureCoords, i % LAYER_SIZE, i / LAYER_SIZE);
+			addToMesh(blocks[i + LAYER_SIZE].frontFace, blocks[i + LAYER_SIZE].textureCoords, i % LAYER_SIZE, i + LAYER_SIZE / LAYER_SIZE);
+		}
+
+
+		addToMesh(blocks[i].topFace, blocks[i].textureCoords, i % LAYER_SIZE, i / LAYER_SIZE);
+		addToMesh(blocks[i].bottomFace, blocks[i].textureCoords, i % LAYER_SIZE, i / LAYER_SIZE);
 	}
+
+	/*for (int i = 0; i < LAYER_SIZE; i++) {
+		addToMesh(blocks[i][LAYER_SIZE-1].backFace, blocks[i][LAYER_SIZE-1].textureCoords, i, LAYER_SIZE-1);
+		addToMesh(blocks[i][LAYER_SIZE - 1].topFace, blocks[i][LAYER_SIZE - 1].textureCoords, i, LAYER_SIZE - 1);
+		addToMesh(blocks[i][LAYER_SIZE - 1].bottomFace, blocks[i][LAYER_SIZE - 1].textureCoords, i, LAYER_SIZE - 1);
+
+
+	}*/
 
 	/*for (int i = 0; i < mesh.size(); i++) {
 		if (i % 5) {

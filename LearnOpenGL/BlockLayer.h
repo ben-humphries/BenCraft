@@ -18,9 +18,9 @@ typedef struct {
 	bool opaque;
 
 	float frontFace[18] = {
+		-0.5f, -0.5f, -0.5f,
 		 0.5f, -0.5f, -0.5f,
 		 0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
 		 0.5f,  0.5f, -0.5f,
 		-0.5f,  0.5f, -0.5f,
 		-0.5f, -0.5f, -0.5f //-z face
@@ -93,7 +93,8 @@ public:
 
 private:
 
-	Block blocks[LAYER_SIZE][LAYER_SIZE];
+	//Block blocks[LAYER_SIZE][LAYER_SIZE];
+	std::vector<Block> blocks;
 	std::vector<float> mesh;
 
 	void addToMesh(float vertices[18], float textureCoords[12], float xOffset, float zOffset);
