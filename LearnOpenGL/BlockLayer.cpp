@@ -84,9 +84,9 @@ void BlockLayer::render(Camera & cam)
 void BlockLayer::addToMesh(float vertices[18], float textureCoords[12], float xOffset, float zOffset)
 {
 	for (int i = 0; i < 6; i++) {
-		mesh.push_back(vertices[3*i] * xOffset);
+		mesh.push_back(vertices[3*i] + xOffset);
 		mesh.push_back(vertices[3*i + 1]);
-		mesh.push_back(vertices[3*i + 2] * zOffset);
+		mesh.push_back(vertices[3*i + 2] + zOffset);
 
 		mesh.push_back(textureCoords[2 * i]);
 		mesh.push_back(textureCoords[2 * i + 1]);
