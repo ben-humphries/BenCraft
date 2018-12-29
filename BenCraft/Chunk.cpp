@@ -112,8 +112,12 @@ void Chunk::initializeBlocks()
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		for (int j = 0; j < CHUNK_SIZE; j++) {
 			for (int k = 0; k < CHUNK_SIZE; k++) {
-				if(j % 2 == 0 || j % 3 == 0)
+				if (j == CHUNK_SIZE - 1)
 					blocks[i][j][k] = Block(BLOCKTYPE_GRASS);
+				else if (j < CHUNK_SIZE - 1 && j > CHUNK_SIZE - 4)
+					blocks[i][j][k] = Block(BLOCKTYPE_DIRT);
+				else
+					blocks[i][j][k] = Block(BLOCKTYPE_STONE);
 
 				blocks[i][j][k].x = i;
 				blocks[i][j][k].y = j;

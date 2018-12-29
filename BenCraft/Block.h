@@ -2,7 +2,9 @@
 
 typedef enum {
 	BLOCKTYPE_AIR,
-	BLOCKTYPE_GRASS
+	BLOCKTYPE_GRASS,
+	BLOCKTYPE_DIRT,
+	BLOCKTYPE_STONE
 } BlockType;
 
 typedef struct {
@@ -29,5 +31,8 @@ public:
 	Block();
 	Block(BlockType type);
 	~Block();
+
+private:
+	void setAllFaces(int textureOffset);
 };
 

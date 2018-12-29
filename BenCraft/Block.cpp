@@ -15,14 +15,16 @@ Block::Block(BlockType type)
 		opaque = false;
 	}
 	else if (type == BLOCKTYPE_GRASS) {
+		setAllFaces(0);
+
 		textureOffsets.topFace = 1;
 		textureOffsets.bottomFace = 2;
-
-		textureOffsets.frontFace,
-			textureOffsets.backFace,
-			textureOffsets.leftFace,
-			textureOffsets.rightFace
-			= 0;
+	}
+	else if (type == BLOCKTYPE_DIRT) {
+		setAllFaces(2);
+	}
+	else if (type == BLOCKTYPE_STONE) {
+		setAllFaces(3);
 	}
 }
 
@@ -30,3 +32,16 @@ Block::Block(BlockType type)
 Block::~Block()
 {
 }
+
+void Block::setAllFaces(int textureOffset)
+{
+	textureOffsets.topFace = textureOffset;
+	textureOffsets.bottomFace = textureOffset;
+	textureOffsets.frontFace = textureOffset;
+	textureOffsets.backFace = textureOffset;
+	textureOffsets.leftFace = textureOffset;
+	textureOffsets.rightFace = textureOffset;
+
+}
+
+
