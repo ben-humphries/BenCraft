@@ -13,7 +13,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "Camera.h"
-#include "BlockLayer.h"
+#include "Chunk.h"
 
 
 #define WINDOW_WIDTH 800
@@ -48,7 +48,7 @@ int main()
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	BlockLayer layer;
+	Chunk chunk;
 
 
 	//texture loading
@@ -130,7 +130,7 @@ int main()
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 
-		layer.render(camera);
+		chunk.render(camera);
 
 
 		window.display();
