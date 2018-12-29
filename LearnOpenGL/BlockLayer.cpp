@@ -9,8 +9,9 @@ BlockLayer::BlockLayer()
 
 	for (int i = 0; i < LAYER_SIZE*LAYER_SIZE; i++) {
 			blocks.push_back(Block());
-			blocks[i].opaque = i % 2 == 0;
+			blocks[i].opaque = true;
 	}
+	blocks[2].opaque = false;
 	generateMesh();
 
 	if (!shaderInitialized) {
@@ -89,11 +90,8 @@ void BlockLayer::generateMesh()
 
 			if (renderCurrent) addToMesh(blocks[i].rightFace, blocks[i].textureCoords, x, z);
 			if (blocks[r_i].opaque) addToMesh(blocks[r_i].leftFace, blocks[r_i].textureCoords, r_x, r_z);
-			
-			/*if (i + 1 % LAYER_SIZE == 0) {
-				printf("here");
-				addToMesh(blocks[i].leftFace, blocks[i].textureCoords, x, z);
-			}*/
+
+			if (!blocks[r_i].opaque && renderCurrent) addToMesh(blocks[i].leftFace, blocks[i].textureCoords, x, z);
 		}
 
 
@@ -103,6 +101,9 @@ void BlockLayer::generateMesh()
 
 			if (renderCurrent) addToMesh(blocks[i].backFace, blocks[i].textureCoords, x, z);
 			if (blocks[b_i].opaque) addToMesh(blocks[b_i].frontFace, blocks[b_i].textureCoords, b_x, b_z);
+
+			if (!blocks[b_i].opaque && renderCurrent) addToMesh(blocks[i].frontFace, blocks[i].textureCoords, x, z);
+
 		}
 
 

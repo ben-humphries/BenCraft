@@ -11,7 +11,7 @@
 
 #include <vector>
 
-const int LAYER_SIZE = 16;
+const int LAYER_SIZE = 2;
 
 
 typedef struct {
