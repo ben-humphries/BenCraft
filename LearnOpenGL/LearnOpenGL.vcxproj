@@ -136,7 +136,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
-    <ClCompile Include="BlockLayer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="main.cpp" />
@@ -147,10 +146,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
-    <ClInclude Include="BlockLayer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Chunk.h" />
-    <ClInclude Include="Cube.h" />
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

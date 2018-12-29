@@ -25,7 +25,7 @@ const float rightFace[18] = {
 	-0.5f, -0.5f, -0.5f,
 	-0.5f, -0.5f, -0.5f,
 	-0.5f, -0.5f,  0.5f,
-	-0.5f,  0.5f,  0.5f //+x face
+	-0.5f,  0.5f,  0.5f //-x face
 };
 
 const float leftFace[18] = {
@@ -34,7 +34,7 @@ const float leftFace[18] = {
 	 0.5f, -0.5f, -0.5f,
 	 0.5f, -0.5f, -0.5f,
 	 0.5f, -0.5f,  0.5f,
-	 0.5f,  0.5f,  0.5f //-x face
+	 0.5f,  0.5f,  0.5f //+x face
 };
 
 const float bottomFace[18] = {
@@ -110,7 +110,8 @@ void Chunk::initializeBlocks()
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		for (int j = 0; j < CHUNK_SIZE; j++) {
 			for (int k = 0; k < CHUNK_SIZE; k++) {
-				blocks[i][j][k] = Block(BLOCKTYPE_SLIME);
+				if(j % 2 == 0 || j % 3 == 0)
+					blocks[i][j][k] = Block(BLOCKTYPE_SLIME);
 			}
 		}
 	}
@@ -122,9 +123,13 @@ void Chunk::generateMesh()
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		for (int j = 0; j < CHUNK_SIZE; j++) {
 			for (int k = 0; k < CHUNK_SIZE; k++) {
-				
+
 				tryAddFace(frontFace, i, j, k, i, j, k - 1);
-				//tryAddFace(backFace, i, j, k, i, j, k + 1);
+				tryAddFace(backFace, i, j, k, i, j, k + 1);
+				tryAddFace(leftFace, i, j, k, i + 1, j, k);
+				tryAddFace(rightFace, i, j, k, i - 1, j, k);
+				tryAddFace(bottomFace, i, j, k, i, j - 1, k);
+				tryAddFace(topFace, i, j, k, i, j + 1, k);
 
 			}
 		}
@@ -155,7 +160,10 @@ void Chunk::tryAddFace(const float face[18], int i, int j, int k, int adj_i, int
 
 	if (adj_i < CHUNK_SIZE && //if the adjacent block exists
 		adj_j < CHUNK_SIZE &&
-		adj_k < CHUNK_SIZE) { 
+		adj_k < CHUNK_SIZE &&
+		adj_i >= 0 &&
+		adj_j >= 0 &&
+		adj_k >= 0) { 
 		
 		Block adjacent_block = blocks[adj_i][adj_j][adj_k];
 
