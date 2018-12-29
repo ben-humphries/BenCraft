@@ -55,7 +55,7 @@ const float topFace[18] = {
 	-0.5f,  0.5f, -0.5f //+y face
 };
 
-const float textureCoords[12] = {
+float textureCoords[12] = {
 	0.0f, 1.0f,
 	1.0f, 1.0f,
 	1.0f, 0.0f,
@@ -70,6 +70,9 @@ bool shaderInitialized = false;
 
 Chunk::Chunk()
 {
+	for (int i = 0; i < 12; i++) {
+		textureCoords[i] /= 10;
+	}
 	initializeBlocks();
 	generateMesh();
 
