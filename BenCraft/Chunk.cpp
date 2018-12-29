@@ -151,11 +151,23 @@ void Chunk::render(Camera & cam)
 {
 	glBindVertexArray(vao);
 
-	glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * glm::mat4(1);// model;
+	glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;// model;
 	shader.setMat4("transform", trans);
 	shader.use();
 
 	glDrawArrays(GL_TRIANGLES, 0, mesh.size() / 5); // mesh.size() * 3 / 5 (to get rid of texCoords) then / 3 for numTriangles
+}
+
+void Chunk::setPosition(glm::vec3 position)
+{
+	this->position = glm::vec3(position.x * CHUNK_SIZE, position.y * CHUNK_SIZE, position.z * CHUNK_SIZE);
+	model = glm::mat4(1);
+	model = glm::translate(model, this->position);
+}
+
+int Chunk::getChunkSize()
+{
+	return CHUNK_SIZE;
 }
 
 //adj values should be the coordinates of the block in the direction of the face being added
@@ -203,7 +215,6 @@ void Chunk::addToMesh(const float vertices[18], float xOffset, float yOffset, fl
 		mesh.push_back(vertices[3 * i + 1] + yOffset);
 		mesh.push_back(vertices[3 * i + 2] + zOffset);
 		
-
 
 		mesh.push_back(textureCoords[2 * i] / TEXTURE_ATLAS_SIZE + offset_x); //x
 		mesh.push_back(textureCoords[2 * i + 1] / TEXTURE_ATLAS_SIZE + offset_y); //y

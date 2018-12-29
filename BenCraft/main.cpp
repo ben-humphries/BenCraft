@@ -12,7 +12,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "Camera.h"
-#include "Chunk.h"
+#include "World.h"
 #include "TextureAtlas.h"
 
 
@@ -48,8 +48,7 @@ int main()
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	Chunk chunk;
-
+	World world;
 
 	//texture loading
 	TextureAtlas::bind("textureAtlas.png");
@@ -112,7 +111,7 @@ int main()
 		clock.restart();
 
 
-		chunk.render(camera);
+		world.render(camera);
 
 
 		window.display();

@@ -20,7 +20,7 @@ enum MoveCamera {
 
 
 const float MOUSE_SENSITIVITY = 0.1f;
-const float MOVEMENT_SPEED = 0.05f;
+const float MOVEMENT_SPEED = 0.2f;
 
 
 class Camera
