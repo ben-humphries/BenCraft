@@ -64,15 +64,14 @@ float textureCoords[12] = {
 	0.0f, 1.0f //BL
 };
 
+const float TEXTURE_ATLAS_SIZE = 10;
+
 static unsigned int vao;
 static Shader shader;
 bool shaderInitialized = false;
 
 Chunk::Chunk()
 {
-	for (int i = 0; i < 12; i++) {
-		textureCoords[i] /= 10;
-	}
 	initializeBlocks();
 	generateMesh();
 
@@ -114,7 +113,11 @@ void Chunk::initializeBlocks()
 		for (int j = 0; j < CHUNK_SIZE; j++) {
 			for (int k = 0; k < CHUNK_SIZE; k++) {
 				if(j % 2 == 0 || j % 3 == 0)
-					blocks[i][j][k] = Block(BLOCKTYPE_SLIME);
+					blocks[i][j][k] = Block(BLOCKTYPE_GRASS);
+
+				blocks[i][j][k].x = i;
+				blocks[i][j][k].y = j;
+				blocks[i][j][k].z = k;
 			}
 		}
 	}
@@ -127,12 +130,12 @@ void Chunk::generateMesh()
 		for (int j = 0; j < CHUNK_SIZE; j++) {
 			for (int k = 0; k < CHUNK_SIZE; k++) {
 
-				tryAddFace(frontFace, i, j, k, i, j, k - 1);
-				tryAddFace(backFace, i, j, k, i, j, k + 1);
-				tryAddFace(leftFace, i, j, k, i + 1, j, k);
-				tryAddFace(rightFace, i, j, k, i - 1, j, k);
-				tryAddFace(bottomFace, i, j, k, i, j - 1, k);
-				tryAddFace(topFace, i, j, k, i, j + 1, k);
+				tryAddFace(frontFace, i, j, k, i, j, k - 1, blocks[i][j][k].textureOffsets.frontFace);
+				tryAddFace(backFace, i, j, k, i, j, k + 1, blocks[i][j][k].textureOffsets.backFace);
+				tryAddFace(leftFace, i, j, k, i + 1, j, k, blocks[i][j][k].textureOffsets.leftFace);
+				tryAddFace(rightFace, i, j, k, i - 1, j, k, blocks[i][j][k].textureOffsets.rightFace);
+				tryAddFace(bottomFace, i, j, k, i, j - 1, k, blocks[i][j][k].textureOffsets.bottomFace);
+				tryAddFace(topFace, i, j, k, i, j + 1, k, blocks[i][j][k].textureOffsets.topFace);
 
 			}
 		}
@@ -153,7 +156,7 @@ void Chunk::render(Camera & cam)
 
 //adj values should be the coordinates of the block in the direction of the face being added
 //for example, if adding rightFace, adj_i = i+1
-void Chunk::tryAddFace(const float face[18], int i, int j, int k, int adj_i, int adj_j, int adj_k) {
+void Chunk::tryAddFace(const float face[18], int i, int j, int k, int adj_i, int adj_j, int adj_k, int textureOffset) {
 
 	Block current_block = blocks[i][j][k];
 
@@ -176,19 +179,30 @@ void Chunk::tryAddFace(const float face[18], int i, int j, int k, int adj_i, int
 	}
 
 	//addFace
-	addToMesh(face, i, j, k);
+	addToMesh(face, i, j, k, textureOffset);
 
 }
 
-void Chunk::addToMesh(const float vertices[18], float xOffset, float yOffset, float zOffset)
+void Chunk::addToMesh(const float vertices[18], float xOffset, float yOffset, float zOffset, int textureOffset)
 {
+	float offset_x = textureOffset % 10;
+	float offset_y = textureOffset / 10;
+	
+	offset_x /= TEXTURE_ATLAS_SIZE;
+	offset_y /= TEXTURE_ATLAS_SIZE;
+
+	if (offset_x < 0) offset_x = 0;
+	if (offset_y < 0) offset_y = 0;
+
 	for (int i = 0; i < 6; i++) {
 		mesh.push_back(vertices[3 * i] + xOffset);
 		mesh.push_back(vertices[3 * i + 1] + yOffset);
 		mesh.push_back(vertices[3 * i + 2] + zOffset);
+		
 
-		mesh.push_back(textureCoords[2 * i]);
-		mesh.push_back(textureCoords[2 * i + 1]);
+
+		mesh.push_back(textureCoords[2 * i] / TEXTURE_ATLAS_SIZE + offset_x); //x
+		mesh.push_back(textureCoords[2 * i + 1] / TEXTURE_ATLAS_SIZE + offset_y); //y
 	}
 }
 

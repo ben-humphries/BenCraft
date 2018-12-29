@@ -5,7 +5,7 @@
 #include "Block.h"
 #include "Camera.h"
 
-const int CHUNK_SIZE = 1;
+const int CHUNK_SIZE = 16;
 
 class Chunk
 {
@@ -21,11 +21,11 @@ public:
 
 private:
 
-	void tryAddFace(const float face[18], int i, int j, int k, int adj_i, int adj_j, int adj_k);
+	void tryAddFace(const float face[18], int i, int j, int k, int adj_i, int adj_j, int adj_k, int textureOffset);
 
 	std::vector<float> mesh;
 
-	void addToMesh(const float vertices[18], float xOffset, float yOffset, float zOffset);
+	void addToMesh(const float vertices[18], float xOffset, float yOffset, float zOffset, int textureOffset);
 
 };
 
