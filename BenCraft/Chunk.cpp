@@ -2,12 +2,12 @@
 #include "Shader.h"
 
 const float frontFace[18] = {
-		-0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		-0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f //-z face
+	0.5f, -0.5f, -0.5f, //BL
+   -0.5f, -0.5f, -0.5f, //BR
+   -0.5f,  0.5f, -0.5f, //TR
+   -0.5f,  0.5f, -0.5f, //TR
+	0.5f,  0.5f, -0.5f, //TL
+	0.5f, -0.5f, -0.5f, //BL -z face
 };
 
 const float backFace[18] = {
@@ -20,48 +20,48 @@ const float backFace[18] = {
 };
 
 const float rightFace[18] = {
-	-0.5f,  0.5f,  0.5f,
-	-0.5f,  0.5f, -0.5f,
-	-0.5f, -0.5f, -0.5f,
 	-0.5f, -0.5f, -0.5f,
 	-0.5f, -0.5f,  0.5f,
-	-0.5f,  0.5f,  0.5f //-x face
+	-0.5f,  0.5f,  0.5f,
+	-0.5f,  0.5f,  0.5f,
+	-0.5f,  0.5f, -0.5f,
+	-0.5f, -0.5f, -0.5f //-x face
 };
 
 const float leftFace[18] = {
-	 0.5f,  0.5f,  0.5f,
-	 0.5f,  0.5f, -0.5f,
-	 0.5f, -0.5f, -0.5f,
-	 0.5f, -0.5f, -0.5f,
-	 0.5f, -0.5f,  0.5f,
-	 0.5f,  0.5f,  0.5f //+x face
+	 0.5f,  -0.5f,  0.5f, //BL
+	 0.5f,  -0.5f, -0.5f, //BR
+	 0.5f,   0.5f, -0.5f, //TR
+	 0.5f,   0.5f, -0.5f, //TR
+	 0.5f,   0.5f,  0.5f, //TL
+	 0.5f,  -0.5f,  0.5f //BL +x face
 };
 
 const float bottomFace[18] = {
-	-0.5f, -0.5f, -0.5f,
-	 0.5f, -0.5f, -0.5f,
-	 0.5f, -0.5f,  0.5f,
-	 0.5f, -0.5f,  0.5f,
-	-0.5f, -0.5f,  0.5f,
-	-0.5f, -0.5f, -0.5f //-y face
+	 0.5f, -0.5f,  0.5f, //BL
+	-0.5f, -0.5f,  0.5f, //BR
+	-0.5f, -0.5f, -0.5f, //TR
+	-0.5f, -0.5f, -0.5f, //TR
+	 0.5f, -0.5f, -0.5f, //TL
+	 0.5f, -0.5f,  0.5f //BL -y face
 };
 
 const float topFace[18] = {
-	-0.5f,  0.5f, -0.5f,
-	 0.5f,  0.5f, -0.5f,
-	 0.5f,  0.5f,  0.5f,
-	 0.5f,  0.5f,  0.5f,
-	-0.5f,  0.5f,  0.5f,
-	-0.5f,  0.5f, -0.5f //+y face
+	 0.5f,  0.5f, -0.5f, //BL
+	-0.5f,  0.5f, -0.5f, //BR
+	-0.5f,  0.5f,  0.5f, //TR
+	-0.5f,  0.5f,  0.5f, //TR
+	 0.5f,  0.5f,  0.5f, //TL
+	 0.5f,  0.5f, -0.5f //BL +y face
 };
 
 float textureCoords[12] = {
-	0.0f, 1.0f,
-	1.0f, 1.0f,
-	1.0f, 0.0f,
-	1.0f, 0.0f,
-	0.0f, 0.0f,
-	0.0f, 1.0f
+	0.0f, 1.0f, //BL
+	1.0f, 1.0f, //BR
+	1.0f, 0.0f, //TR
+	1.0f, 0.0f, //TR
+	0.0f, 0.0f, //TL
+	0.0f, 1.0f //BL
 };
 
 static unsigned int vao;
