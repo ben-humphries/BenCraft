@@ -21,7 +21,6 @@ public:
 
 private:
 	long worldSizeBlocks;
-	long worldHeightBlocks;
 
 	int getHeightAtXZ(glm::vec2 position);
 

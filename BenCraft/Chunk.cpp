@@ -84,7 +84,7 @@ Chunk::~Chunk()
 void Chunk::initializeBlocks()
 {
 	for (int i = 0; i < CHUNK_SIZE; i++) {
-		for (int j = 0; j < CHUNK_SIZE; j++) {
+		for (int j = 0; j < CHUNK_HEIGHT; j++) {
 			for (int k = 0; k < CHUNK_SIZE; k++) {
 
 				blocks[i][j][k] = Block(BLOCKTYPE_AIR);
@@ -101,7 +101,7 @@ void Chunk::generateMesh()
 
 	//loop through all blocks in the chunk
 	for (int i = 0; i < CHUNK_SIZE; i++) {
-		for (int j = 0; j < CHUNK_SIZE; j++) {
+		for (int j = 0; j < CHUNK_HEIGHT; j++) {
 			for (int k = 0; k < CHUNK_SIZE; k++) {
 
 				tryAddFace(frontFace, i, j, k, i, j, k - 1, blocks[i][j][k].textureOffsets.frontFace);
@@ -160,7 +160,7 @@ void Chunk::setPosition(glm::vec3 position)
 	this->position = position;
 	model = glm::mat4(1);
 
-	glm::vec3 b_position = glm::vec3(position.x * CHUNK_SIZE, position.y * CHUNK_SIZE, position.z * CHUNK_SIZE);
+	glm::vec3 b_position = glm::vec3(position.x * CHUNK_SIZE, position.y * CHUNK_HEIGHT, position.z * CHUNK_SIZE);
 	model = glm::translate(model, b_position);
 }
 
@@ -180,7 +180,7 @@ void Chunk::tryAddFace(const float face[18], int i, int j, int k, int adj_i, int
 	}
 
 	if (adj_i < CHUNK_SIZE && //if the adjacent block exists
-		adj_j < CHUNK_SIZE &&
+		adj_j < CHUNK_HEIGHT &&
 		adj_k < CHUNK_SIZE &&
 		adj_i >= 0 &&
 		adj_j >= 0 &&

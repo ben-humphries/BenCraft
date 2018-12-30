@@ -6,6 +6,7 @@
 #include "Camera.h"
 
 const int CHUNK_SIZE = 16;
+const int CHUNK_HEIGHT = 64;
 
 class Chunk
 {
@@ -13,7 +14,7 @@ public:
 	Chunk();
 	~Chunk();
 
-	Block blocks[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
+	Block blocks[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE];
 
 	void initializeBlocks();
 	//void addBlock(BlockType type, )
