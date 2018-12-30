@@ -64,8 +64,8 @@ int main()
 	glClearDepth(1.f);
 
 	//Enable alpha blending
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glClearColor(0.0f, 0.3f, 0.8f, 1.0f);
 

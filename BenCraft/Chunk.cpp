@@ -66,8 +66,11 @@ float textureCoords[12] = {
 
 const float TEXTURE_ATLAS_SIZE = 10;
 
-static Shader shader;
-bool shaderInitialized = false;
+static Shader textureShader;
+bool textureShaderInitialized = false;
+
+static Shader waterShader;
+bool waterShaderInitialized = false;
 
 Chunk::Chunk()
 {
@@ -117,27 +120,43 @@ void Chunk::generateMesh()
 	}
 	//test each face by comparing to adjacent block
 
-	if (!shaderInitialized) {
-		shader = Shader("vertex.glsl", "fragment.glsl");
-		shaderInitialized = true;
+	if (!textureShaderInitialized) {
+		textureShader = Shader("vertex.glsl", "fragment.glsl");
+		textureShaderInitialized = true;
+	}
+
+	if (!waterShaderInitialized) {
+		waterShader = Shader("vertex.glsl", "water_fragment.glsl");
+		waterShaderInitialized = true;
 	}
 
 	if (terrainVAO == 0)
 		glGenVertexArrays(1, &terrainVAO);
+	if (waterVAO == 0)
+		glGenVertexArrays(1, &waterVAO);
 
 	addMeshToVAO(terrainVAO, terrainMesh);
+	addMeshToVAO(waterVAO, waterMesh);
 }
 
 void Chunk::render(Camera & cam)
 {
 	glBindVertexArray(terrainVAO);
 
-	shader.use();
+	textureShader.use();
 
 	glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;// model;
-	shader.setMat4("transform", trans);
+	textureShader.setMat4("transform", trans);
 
 	glDrawArrays(GL_TRIANGLES, 0, terrainMesh.size() / 5); // mesh.size() * 3 / 5 (to get rid of texCoords) then / 3 for numTriangles
+
+	glBindVertexArray(waterVAO);
+
+	waterShader.use();
+
+	waterShader.setMat4("transform", trans);
+
+	glDrawArrays(GL_TRIANGLES, 0, waterMesh.size() / 5);
 }
 
 void Chunk::setPosition(glm::vec3 position)
@@ -173,18 +192,31 @@ void Chunk::tryAddFace(const float face[18], int i, int j, int k, int adj_i, int
 		
 		Block adjacent_block = blocks[adj_i][adj_j][adj_k];
 
-		if (adjacent_block.opaque) { //if the adjacent block is opaque, dont add the face
-			return;
+		if (adjacent_block.type != BLOCKTYPE_AIR) {
+			if (!current_block.opaque && !adjacent_block.opaque) {
+				return;
+			}
+			if (current_block.opaque && adjacent_block.opaque) {
+				return;
+			}
+			if (!current_block.opaque && adjacent_block.opaque) {
+				return;
+			}
 		}
 	}
 
 	//addFace
-	addToTerrainMesh(face, i, j, k, textureOffset);
+	if (current_block.type == BLOCKTYPE_WATER) {
+		addToMesh(waterMesh, face, i, j, k, textureOffset);
+	}
+	else {
+		addToMesh(terrainMesh, face, i, j, k, textureOffset);
+	}
 
 
 }
 
-void Chunk::addToTerrainMesh(const float vertices[18], float xOffset, float yOffset, float zOffset, int textureOffset)
+void Chunk::addToMesh(std::vector<float> & mesh, const float vertices[18], float xOffset, float yOffset, float zOffset, int textureOffset)
 {
 	float offset_x = textureOffset % 10;
 	float offset_y = textureOffset / 10;
@@ -196,13 +228,13 @@ void Chunk::addToTerrainMesh(const float vertices[18], float xOffset, float yOff
 	if (offset_y < 0) offset_y = 0;
 
 	for (int i = 0; i < 6; i++) {
-		terrainMesh.push_back(vertices[3 * i] + xOffset);
-		terrainMesh.push_back(vertices[3 * i + 1] + yOffset);
-		terrainMesh.push_back(vertices[3 * i + 2] + zOffset);
+		mesh.push_back(vertices[3 * i] + xOffset);
+		mesh.push_back(vertices[3 * i + 1] + yOffset);
+		mesh.push_back(vertices[3 * i + 2] + zOffset);
 		
 
-		terrainMesh.push_back(textureCoords[2 * i] / TEXTURE_ATLAS_SIZE + offset_x); //x
-		terrainMesh.push_back(textureCoords[2 * i + 1] / TEXTURE_ATLAS_SIZE + offset_y); //y
+		mesh.push_back(textureCoords[2 * i] / TEXTURE_ATLAS_SIZE + offset_x); //x
+		mesh.push_back(textureCoords[2 * i + 1] / TEXTURE_ATLAS_SIZE + offset_y); //y
 	}
 }
 
@@ -217,7 +249,7 @@ void Chunk::addMeshToVAO(unsigned int vao, std::vector<float> mesh)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 	//copy vertices data to vbo
-	if (terrainMesh.size() > 0)
+	if (mesh.size() > 0)
 		glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh[0], GL_STATIC_DRAW);
 
 

@@ -35,7 +35,7 @@ private:
 
 	glm::mat4 model = glm::mat4(1);
 
-	void addToTerrainMesh(const float vertices[18], float xOffset, float yOffset, float zOffset, int textureOffset);
+	void addToMesh(std::vector<float> & mesh, const float vertices[18], float xOffset, float yOffset, float zOffset, int textureOffset);
 
 	void addMeshToVAO(unsigned int vao, std::vector<float> mesh);
 

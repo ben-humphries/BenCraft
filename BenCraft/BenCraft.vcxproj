@@ -147,6 +147,7 @@
     <None Include="skybox_fragment.glsl" />
     <None Include="skybox_vertex.glsl" />
     <None Include="vertex.glsl" />
+    <None Include="water_fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />

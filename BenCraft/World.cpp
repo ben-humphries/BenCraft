@@ -2,6 +2,10 @@
 
 #include "PerlinNoise.hpp"
 
+double freq = 2;
+int octaves = 2;
+int waterLevel = 13;
+
 World::World()
 {
 	for (int i = 0; i < WORLD_SIZE; i++) {
@@ -30,11 +34,18 @@ World::World()
 
 			int index = getChunkAt(glm::vec3(c_x, 0, c_z));
 
-			for (int y = 0; y < h; y++) {
-				chunks[index].blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_DIRT);
-			}
-			for (int y = h-1; y < h; y++) {
-				chunks[index].blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_GRASS);
+			for (int y = 0; y < CHUNK_HEIGHT; y++) {
+				if (y < h) {
+					if (y == h - 1 && y >= waterLevel) {
+						chunks[index].blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_GRASS);
+					}
+					else {
+						chunks[index].blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_DIRT);
+					}
+				}
+				else if (y <= waterLevel) {
+					chunks[index].blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_WATER);
+				}
 			}
 
 
@@ -60,10 +71,6 @@ void World::render(Camera & cam)
 
 int World::getHeightAtXZ(glm::vec2 position)
 {
-	
-	double freq = 2;
-	int octaves = 2;
-	int waterLevel = 10;
 
 	siv::PerlinNoise noise(1234);
 
