@@ -37,7 +37,7 @@ int main()
 	sf::Window window;
 
 
-	window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "LearnOpenGL", sf::Style::Default, settings);
+	window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "BenCraft", sf::Style::Default, settings);
 	window.setVerticalSyncEnabled(true);
 	window.setMouseCursorVisible(false);
 
