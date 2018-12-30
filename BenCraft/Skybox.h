@@ -89,8 +89,7 @@ public:
 
 		}
 
-		if (vao == 0)
-			glGenVertexArrays(1, &vao);
+		glGenVertexArrays(1, &vao);
 
 		glBindVertexArray(vao);
 
@@ -110,8 +109,6 @@ public:
 
 		//Initialize shader
 		shader = Shader("skybox_vertex.glsl", "skybox_fragment.glsl");
-
-		printf("%i\n", vao);
 
 	}
 	void bindCubeMapTexture() {

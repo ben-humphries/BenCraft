@@ -142,9 +142,6 @@ void Chunk::generateMesh()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-
-	printf("C:%i\n", vao);
-
 }
 
 void Chunk::render(Camera & cam)
@@ -155,7 +152,6 @@ void Chunk::render(Camera & cam)
 
 	glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;// model;
 	shader.setMat4("transform", trans);
-
 
 	glDrawArrays(GL_TRIANGLES, 0, mesh.size() / 5); // mesh.size() * 3 / 5 (to get rid of texCoords) then / 3 for numTriangles
 }
@@ -200,6 +196,7 @@ void Chunk::tryAddFace(const float face[18], int i, int j, int k, int adj_i, int
 
 	//addFace
 	addToMesh(face, i, j, k, textureOffset);
+
 
 }
 
