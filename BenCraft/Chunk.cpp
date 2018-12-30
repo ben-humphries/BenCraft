@@ -204,6 +204,9 @@ void Chunk::tryAddFace(const float face[18], int i, int j, int k, int adj_i, int
 			}
 		}
 	}
+	else {
+		return;
+	}
 
 	//addFace
 	if (current_block.type == BLOCKTYPE_WATER) {
