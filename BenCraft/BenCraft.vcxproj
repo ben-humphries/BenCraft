@@ -150,6 +150,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Chunk.h" />
+    <ClInclude Include="PerlinNoise.hpp" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="TextureAtlas.h" />
     <ClInclude Include="World.h" />

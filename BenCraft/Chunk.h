@@ -16,6 +16,7 @@ public:
 	Block blocks[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
 
 	void initializeBlocks();
+	//void addBlock(BlockType type, )
 	void generateMesh();
 	void render(Camera &cam);
 	void setPosition(glm::vec3 position);
