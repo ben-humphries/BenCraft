@@ -21,8 +21,6 @@ class Block
 {
 public:
 
-	float x, y, z;
-
 	bool opaque = true;
 
 	BlockType type;
@@ -31,6 +29,8 @@ public:
 	Block();
 	Block(BlockType type);
 	~Block();
+
+	void setType(BlockType type);
 
 private:
 	void setAllFaces(int textureOffset);

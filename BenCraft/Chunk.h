@@ -35,5 +35,6 @@ private:
 
 	void addToMesh(const float vertices[18], float xOffset, float yOffset, float zOffset, int textureOffset);
 
+	unsigned int vao;
 };
 

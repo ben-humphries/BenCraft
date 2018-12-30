@@ -5,8 +5,8 @@
 #include "PerlinNoise.hpp"
 
 
-const int WORLD_SIZE = 10; //in chunks
-const int WORLD_HEIGHT = 2; //in chunks
+const int WORLD_SIZE = 5; //in chunks
+const int WORLD_HEIGHT = 1; //in chunks
 
 
 class World
@@ -23,6 +23,8 @@ private:
 	long worldSizeBlocks;
 	long worldHeightBlocks;
 
-	int getHeightAtXY(glm::vec2 position);
+	int getHeightAtXZ(glm::vec2 position);
+
+	int getChunkAt(glm::vec3 position);
 };
 

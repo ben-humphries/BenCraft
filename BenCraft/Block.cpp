@@ -1,14 +1,24 @@
 #include "Block.h"
 
+#include <iostream>
 
 Block::Block()
 {
-	this ->type = BLOCKTYPE_AIR;
-	opaque = false;
 }
 
 Block::Block(BlockType type)
 {
+	setType(type);
+}
+
+
+Block::~Block()
+{
+}
+
+void Block::setType(BlockType type)
+{
+	opaque = true;
 	this->type = type;
 
 	if (type == BLOCKTYPE_AIR) {
@@ -26,11 +36,6 @@ Block::Block(BlockType type)
 	else if (type == BLOCKTYPE_STONE) {
 		setAllFaces(3);
 	}
-}
-
-
-Block::~Block()
-{
 }
 
 void Block::setAllFaces(int textureOffset)

@@ -66,7 +66,6 @@ float textureCoords[12] = {
 
 const float TEXTURE_ATLAS_SIZE = 10;
 
-static unsigned int vao;
 static Shader shader;
 bool shaderInitialized = false;
 
@@ -74,6 +73,48 @@ Chunk::Chunk()
 {
 	initializeBlocks();
 	generateMesh();
+
+}
+
+
+Chunk::~Chunk()
+{
+}
+
+void Chunk::initializeBlocks()
+{
+	for (int i = 0; i < CHUNK_SIZE; i++) {
+		for (int j = 0; j < CHUNK_SIZE; j++) {
+			for (int k = 0; k < CHUNK_SIZE; k++) {
+
+				blocks[i][j][k] = Block(BLOCKTYPE_AIR);
+
+			}
+		}
+	}
+}
+
+void Chunk::generateMesh()
+{
+
+	mesh.clear();
+
+	//loop through all blocks in the chunk
+	for (int i = 0; i < CHUNK_SIZE; i++) {
+		for (int j = 0; j < CHUNK_SIZE; j++) {
+			for (int k = 0; k < CHUNK_SIZE; k++) {
+
+				tryAddFace(frontFace, i, j, k, i, j, k - 1, blocks[i][j][k].textureOffsets.frontFace);
+				tryAddFace(backFace, i, j, k, i, j, k + 1, blocks[i][j][k].textureOffsets.backFace);
+				tryAddFace(leftFace, i, j, k, i + 1, j, k, blocks[i][j][k].textureOffsets.leftFace);
+				tryAddFace(rightFace, i, j, k, i - 1, j, k, blocks[i][j][k].textureOffsets.rightFace);
+				tryAddFace(bottomFace, i, j, k, i, j - 1, k, blocks[i][j][k].textureOffsets.bottomFace);
+				tryAddFace(topFace, i, j, k, i, j + 1, k, blocks[i][j][k].textureOffsets.topFace);
+
+			}
+		}
+	}
+	//test each face by comparing to adjacent block
 
 	if (!shaderInitialized) {
 		shader = Shader("vertex.glsl", "fragment.glsl");
@@ -92,7 +133,8 @@ Chunk::Chunk()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 	//copy vertices data to vbo
-	glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh[0], GL_STATIC_DRAW);
+	if (mesh.size() > 0)
+		glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh[0], GL_STATIC_DRAW);
 
 
 	//link vertex attributes, position first, then color
@@ -100,51 +142,6 @@ Chunk::Chunk()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-}
-
-
-Chunk::~Chunk()
-{
-}
-
-void Chunk::initializeBlocks()
-{
-	for (int i = 0; i < CHUNK_SIZE; i++) {
-		for (int j = 0; j < CHUNK_SIZE; j++) {
-			for (int k = 0; k < CHUNK_SIZE; k++) {
-				if (j == CHUNK_SIZE - 1)
-					blocks[i][j][k] = Block(BLOCKTYPE_GRASS);
-				else if (j < CHUNK_SIZE - 1 && j > CHUNK_SIZE - 4)
-					blocks[i][j][k] = Block(BLOCKTYPE_DIRT);
-				else
-					blocks[i][j][k] = Block(BLOCKTYPE_STONE);
-
-				blocks[i][j][k].x = i;
-				blocks[i][j][k].y = j;
-				blocks[i][j][k].z = k;
-			}
-		}
-	}
-}
-
-void Chunk::generateMesh()
-{
-	//loop through all blocks in the chunk
-	for (int i = 0; i < CHUNK_SIZE; i++) {
-		for (int j = 0; j < CHUNK_SIZE; j++) {
-			for (int k = 0; k < CHUNK_SIZE; k++) {
-
-				tryAddFace(frontFace, i, j, k, i, j, k - 1, blocks[i][j][k].textureOffsets.frontFace);
-				tryAddFace(backFace, i, j, k, i, j, k + 1, blocks[i][j][k].textureOffsets.backFace);
-				tryAddFace(leftFace, i, j, k, i + 1, j, k, blocks[i][j][k].textureOffsets.leftFace);
-				tryAddFace(rightFace, i, j, k, i - 1, j, k, blocks[i][j][k].textureOffsets.rightFace);
-				tryAddFace(bottomFace, i, j, k, i, j - 1, k, blocks[i][j][k].textureOffsets.bottomFace);
-				tryAddFace(topFace, i, j, k, i, j + 1, k, blocks[i][j][k].textureOffsets.topFace);
-
-			}
-		}
-	}
-	//test each face by comparing to adjacent block
 }
 
 void Chunk::render(Camera & cam)
@@ -160,9 +157,11 @@ void Chunk::render(Camera & cam)
 
 void Chunk::setPosition(glm::vec3 position)
 {
-	this->position = glm::vec3(position.x * CHUNK_SIZE, position.y * CHUNK_SIZE, position.z * CHUNK_SIZE);
+	this->position = position;
 	model = glm::mat4(1);
-	model = glm::translate(model, this->position);
+
+	glm::vec3 b_position = glm::vec3(position.x * CHUNK_SIZE, position.y * CHUNK_SIZE, position.z * CHUNK_SIZE);
+	model = glm::translate(model, b_position);
 }
 
 int Chunk::getChunkSize()
