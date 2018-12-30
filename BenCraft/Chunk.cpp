@@ -97,7 +97,8 @@ void Chunk::initializeBlocks()
 void Chunk::generateMesh()
 {
 
-	mesh.clear();
+	terrainMesh.clear();
+	waterMesh.clear();
 
 	//loop through all blocks in the chunk
 	for (int i = 0; i < CHUNK_SIZE; i++) {
@@ -121,39 +122,22 @@ void Chunk::generateMesh()
 		shaderInitialized = true;
 	}
 
-	if (vao == 0)
-		glGenVertexArrays(1, &vao);
+	if (terrainVAO == 0)
+		glGenVertexArrays(1, &terrainVAO);
 
-	glBindVertexArray(vao);
-
-	//initialize vertex buffer object
-	unsigned int vbo;
-	glGenBuffers(1, &vbo);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-	//copy vertices data to vbo
-	if (mesh.size() > 0)
-		glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh[0], GL_STATIC_DRAW);
-
-
-	//link vertex attributes, position first, then color
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
+	addMeshToVAO(terrainVAO, terrainMesh);
 }
 
 void Chunk::render(Camera & cam)
 {
-	glBindVertexArray(vao);
+	glBindVertexArray(terrainVAO);
 
 	shader.use();
 
 	glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;// model;
 	shader.setMat4("transform", trans);
 
-	glDrawArrays(GL_TRIANGLES, 0, mesh.size() / 5); // mesh.size() * 3 / 5 (to get rid of texCoords) then / 3 for numTriangles
+	glDrawArrays(GL_TRIANGLES, 0, terrainMesh.size() / 5); // mesh.size() * 3 / 5 (to get rid of texCoords) then / 3 for numTriangles
 }
 
 void Chunk::setPosition(glm::vec3 position)
@@ -195,12 +179,12 @@ void Chunk::tryAddFace(const float face[18], int i, int j, int k, int adj_i, int
 	}
 
 	//addFace
-	addToMesh(face, i, j, k, textureOffset);
+	addToTerrainMesh(face, i, j, k, textureOffset);
 
 
 }
 
-void Chunk::addToMesh(const float vertices[18], float xOffset, float yOffset, float zOffset, int textureOffset)
+void Chunk::addToTerrainMesh(const float vertices[18], float xOffset, float yOffset, float zOffset, int textureOffset)
 {
 	float offset_x = textureOffset % 10;
 	float offset_y = textureOffset / 10;
@@ -212,14 +196,36 @@ void Chunk::addToMesh(const float vertices[18], float xOffset, float yOffset, fl
 	if (offset_y < 0) offset_y = 0;
 
 	for (int i = 0; i < 6; i++) {
-		mesh.push_back(vertices[3 * i] + xOffset);
-		mesh.push_back(vertices[3 * i + 1] + yOffset);
-		mesh.push_back(vertices[3 * i + 2] + zOffset);
+		terrainMesh.push_back(vertices[3 * i] + xOffset);
+		terrainMesh.push_back(vertices[3 * i + 1] + yOffset);
+		terrainMesh.push_back(vertices[3 * i + 2] + zOffset);
 		
 
-		mesh.push_back(textureCoords[2 * i] / TEXTURE_ATLAS_SIZE + offset_x); //x
-		mesh.push_back(textureCoords[2 * i + 1] / TEXTURE_ATLAS_SIZE + offset_y); //y
+		terrainMesh.push_back(textureCoords[2 * i] / TEXTURE_ATLAS_SIZE + offset_x); //x
+		terrainMesh.push_back(textureCoords[2 * i + 1] / TEXTURE_ATLAS_SIZE + offset_y); //y
 	}
+}
+
+void Chunk::addMeshToVAO(unsigned int vao, std::vector<float> mesh)
+{
+	glBindVertexArray(vao);
+
+	//initialize vertex buffer object
+	unsigned int vbo;
+	glGenBuffers(1, &vbo);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	//copy vertices data to vbo
+	if (terrainMesh.size() > 0)
+		glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh[0], GL_STATIC_DRAW);
+
+
+	//link vertex attributes, position first, then tex coords
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 }
 
 

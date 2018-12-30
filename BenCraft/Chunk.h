@@ -30,12 +30,16 @@ private:
 
 	void tryAddFace(const float face[18], int i, int j, int k, int adj_i, int adj_j, int adj_k, int textureOffset);
 
-	std::vector<float> mesh;
+	std::vector<float> terrainMesh;
+	std::vector<float> waterMesh;
 
 	glm::mat4 model = glm::mat4(1);
 
-	void addToMesh(const float vertices[18], float xOffset, float yOffset, float zOffset, int textureOffset);
+	void addToTerrainMesh(const float vertices[18], float xOffset, float yOffset, float zOffset, int textureOffset);
 
-	unsigned int vao;
+	void addMeshToVAO(unsigned int vao, std::vector<float> mesh);
+
+	unsigned int terrainVAO;
+	unsigned int waterVAO;
 };
 

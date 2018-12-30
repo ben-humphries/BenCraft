@@ -36,6 +36,10 @@ void Block::setType(BlockType type)
 	else if (type == BLOCKTYPE_STONE) {
 		setAllFaces(3);
 	}
+	else if (type == BLOCKTYPE_WATER) {
+		opaque = false;
+		setAllFaces(4);
+	}
 }
 
 void Block::setAllFaces(int textureOffset)

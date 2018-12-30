@@ -4,7 +4,8 @@ typedef enum {
 	BLOCKTYPE_AIR,
 	BLOCKTYPE_GRASS,
 	BLOCKTYPE_DIRT,
-	BLOCKTYPE_STONE
+	BLOCKTYPE_STONE,
+	BLOCKTYPE_WATER
 } BlockType;
 
 typedef struct {
