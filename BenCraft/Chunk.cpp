@@ -142,15 +142,20 @@ void Chunk::generateMesh()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+
+	printf("C:%i\n", vao);
+
 }
 
 void Chunk::render(Camera & cam)
 {
 	glBindVertexArray(vao);
 
+	shader.use();
+
 	glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;// model;
 	shader.setMat4("transform", trans);
-	shader.use();
+
 
 	glDrawArrays(GL_TRIANGLES, 0, mesh.size() / 5); // mesh.size() * 3 / 5 (to get rid of texCoords) then / 3 for numTriangles
 }

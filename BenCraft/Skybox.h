@@ -12,8 +12,8 @@ class Skybox {
 		"skybox/left.tga",
 		"skybox/top.tga",
 		"skybox/bottom.tga",
-		"skybox/front.tga",
-		"skybox/back.tga"
+		"skybox/back.tga",
+		"skybox/front.tga"
 	};
 
 	const float vertices[108] = {
@@ -85,7 +85,7 @@ public:
 				std::cout << "Error: could not load texture from file" << std::endl;
 			}
 
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, img.getSize().x, img.getSize().y, 0, GL_RGB, GL_UNSIGNED_BYTE, img.getPixelsPtr());
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, img.getSize().x, img.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.getPixelsPtr());
 
 		}
 
@@ -111,6 +111,8 @@ public:
 		//Initialize shader
 		shader = Shader("skybox_vertex.glsl", "skybox_fragment.glsl");
 
+		printf("%i\n", vao);
+
 	}
 	void bindCubeMapTexture() {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
@@ -121,10 +123,13 @@ public:
 
 		glBindVertexArray(vao);
 
-		shader.setMat4("projection", cam.getProjectionMatrix());
-		shader.setMat4("view", cam.getViewMatrix());
+		glm::mat4 view = glm::mat4(glm::mat3(cam.getViewMatrix()));
 
 		shader.use();
+
+		shader.setMat4("projection", cam.getProjectionMatrix());
+		shader.setMat4("view", view);
+
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 

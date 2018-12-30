@@ -51,9 +51,10 @@ int main()
 
 	World world;
 	Skybox skybox;
+	TextureAtlas textureAtlas;
 
 	//texture loading
-	TextureAtlas::bind("textureAtlas.png");
+	textureAtlas.load("textureAtlas.png");
 	skybox.bindCubeMapTexture();
 
 
@@ -114,8 +115,10 @@ int main()
 
 		clock.restart();
 
+		skybox.bindCubeMapTexture();
 		skybox.render(camera);
-		//world.render(camera);
+		textureAtlas.bind();
+		world.render(camera);
 
 
 		window.display();
