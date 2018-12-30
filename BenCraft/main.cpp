@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "World.h"
 #include "TextureAtlas.h"
+#include "Skybox.h"
 
 
 #define WINDOW_WIDTH 800
@@ -49,9 +50,12 @@ int main()
 	glewInit();
 
 	World world;
+	Skybox skybox;
 
 	//texture loading
 	TextureAtlas::bind("textureAtlas.png");
+	skybox.bindCubeMapTexture();
+
 
 	//Enable z-buffer testing
 	glEnable(GL_DEPTH_TEST);
@@ -110,8 +114,8 @@ int main()
 
 		clock.restart();
 
-
-		world.render(camera);
+		skybox.render(camera);
+		//world.render(camera);
 
 
 		window.display();

@@ -9,6 +9,7 @@
 class TextureAtlas
 {
 public:
+	//TODO: add load method and make bind only glBindTexture
 	static void bind(std::string dir) {
 		sf::Image img;
 

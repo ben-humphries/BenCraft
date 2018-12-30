@@ -65,7 +65,7 @@ int World::getHeightAtXZ(glm::vec2 position)
 	int octaves = 2;
 	int waterLevel = 10;
 
-	siv::PerlinNoise noise(12345);
+	siv::PerlinNoise noise(1234);
 
 	double fx = worldSizeBlocks / freq, fz = worldSizeBlocks / freq;
 
