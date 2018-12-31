@@ -120,6 +120,9 @@ void Chunk::generateMesh()
 			}
 		}
 	}
+
+	terrainMeshFaces = terrainMesh.size() / 5; // mesh.size() * 3 / 5 (to get rid of texCoords) then / 3 for numTriangles
+	waterMeshFaces = waterMesh.size() / 5;
 	//test each face by comparing to adjacent block
 
 	//////////////////////////DO ALL OF THIS IN A SEPARATE PUBLIC METHOD. NOTHING OPENGL CAN HAPPEN ON THE MESH GEN THREAD////////////////////////
@@ -135,8 +138,7 @@ void Chunk::renderTerrain(Camera & cam)
 	glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;// model;
 	textureShader.setMat4("transform", trans);
 
-	glDrawArrays(GL_TRIANGLES, 0, terrainMesh.size() / 5); // mesh.size() * 3 / 5 (to get rid of texCoords) then / 3 for numTriangles
-
+	glDrawArrays(GL_TRIANGLES, 0, terrainMeshFaces); // mesh.size() * 3 / 5 (to get rid of texCoords) then / 3 for numTriangles
 }
 void Chunk::renderWater(Camera & cam)
 {
@@ -148,7 +150,7 @@ void Chunk::renderWater(Camera & cam)
 	glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;// model;
 	waterShader.setMat4("transform", trans);
 
-	glDrawArrays(GL_TRIANGLES, 0, waterMesh.size() / 5);
+	glDrawArrays(GL_TRIANGLES, 0, waterMeshFaces);
 }
 
 void Chunk::setPosition(glm::vec3 position)

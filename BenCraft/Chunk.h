@@ -53,5 +53,8 @@ private:
 	unsigned int terrainVBO;
 	unsigned int waterVBO;
 
+	int terrainMeshFaces;
+	int waterMeshFaces;
+
 };
 

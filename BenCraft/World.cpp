@@ -20,7 +20,7 @@ World::~World()
 
 void World::render(Camera & cam)
 {
-
+	mutex.lock();
 	for (int i = 0; i < chunks.size(); i++) {
 		if (isChunkLoaded(i)) {
 			if (!chunks[i].meshesBoundToVAO) {
@@ -29,7 +29,6 @@ void World::render(Camera & cam)
 
 			chunks[i].renderTerrain(cam);
 		}
-
 	}
 
 	//Sort the transparent meshes and render them last to first.
@@ -41,12 +40,13 @@ void World::render(Camera & cam)
 			chunks[it->second].renderWater(cam);
 		}
 	}
+	mutex.unlock();
+
 }
 
 void World::updateChunks(Camera * cam)
 {
 	while (true) {
-		mutex.lock();
 		glm::vec3 cameraPos = cam->getPosition();
 
 		int c_x;
@@ -103,7 +103,6 @@ void World::updateChunks(Camera * cam)
 				y += dy;
 			}
 		}
-		mutex.unlock();
 	}
 
 }
@@ -186,7 +185,7 @@ bool World::isChunkLoaded(glm::vec3 position)
 
 bool World::isChunkLoaded(int index)
 {
-	if (index != -1 && chunks[index].loaded) {
+	if (index != -1 && index < chunks.size() && chunks[index].loaded) {
 		return true;
 	}
 	return false;
