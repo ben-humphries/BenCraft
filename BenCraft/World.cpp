@@ -88,7 +88,7 @@ int World::getHeightAtXZ(glm::vec2 position)
 
 	siv::PerlinNoise noise(1234);
 
-	double fx = worldSizeBlocks / freq, fz = worldSizeBlocks / freq;
+	double fx = 80 / freq, fz = 80 / freq;
 
 	double val = noise.octaveNoise0_1(position.x / fx, position.y / fz, octaves) * (CHUNK_HEIGHT / 2);
 

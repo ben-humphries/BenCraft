@@ -5,7 +5,7 @@
 #include "PerlinNoise.hpp"
 
 
-const int WORLD_SIZE = 5; //in chunks
+const int WORLD_SIZE = 10; //in chunks
 const int WORLD_HEIGHT = 1; //in chunks
 
 
