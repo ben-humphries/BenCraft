@@ -56,10 +56,11 @@ World::World()
 		chunks[i].generateMesh();
 	}*/
 
-	loadChunk(glm::vec3(0, 0, 0));
-	loadChunk(glm::vec3(1, 0, 0));
-	loadChunk(glm::vec3(0, 0, 1));
-	loadChunk(glm::vec3(1, 0, 1));
+	for (int x = -3; x < 3; x++) {
+		for (int z = -3; z < 3; z++) {
+			loadChunk(glm::vec3(x, 0, z));
+		}
+	}
 
 }
 
@@ -86,6 +87,21 @@ void World::render(Camera & cam)
 	for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
 	{
 		chunks[it->second].renderWater(cam);
+	}
+}
+
+void World::updateChunks(Camera & cam)
+{
+	glm::vec3 cameraPos = cam.getPosition();
+
+	if (chunks.size() > MAX_CHUNKS) {
+		//remove furthest chunk
+	}
+
+	glm::vec3 chunkPos(cameraPos.x / CHUNK_SIZE, 0, cameraPos.z / CHUNK_SIZE);
+
+	if (!isChunkLoaded(chunkPos)) {
+		loadChunk(chunkPos);
 	}
 }
 
@@ -125,17 +141,20 @@ void World::loadChunk(glm::vec3 position)
 		for (int z = z_start; z < z_start + CHUNK_SIZE; z++) {
 			int h = getHeightAtXZ(glm::vec2(x, z));
 
+			int abs_x = glm::abs(x);
+			int abs_z = glm::abs(z);
+
 			for (int y = 0; y < CHUNK_HEIGHT; y++) {
 				if (y < h) {
 					if (y == h - 1 && y >= waterLevel) {
-						c.blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_GRASS);
+						c.blocks[abs_x % CHUNK_SIZE][y][abs_z % CHUNK_SIZE].setType(BLOCKTYPE_GRASS);
 					}
 					else {
-						c.blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_DIRT);
+						c.blocks[abs_x % CHUNK_SIZE][y][abs_z % CHUNK_SIZE].setType(BLOCKTYPE_DIRT);
 					}
 				}
 				else if (y <= waterLevel) {
-					c.blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_WATER);
+					c.blocks[abs_x % CHUNK_SIZE][y][abs_z % CHUNK_SIZE].setType(BLOCKTYPE_WATER);
 				}
 			}
 
@@ -146,4 +165,19 @@ void World::loadChunk(glm::vec3 position)
 	c.generateMesh();
 
 	chunks.push_back(c);
+}
+
+bool World::isChunkLoaded(glm::vec3 position)
+{
+	if (getChunkAt(position) == -1) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+void World::unloadChunk(glm::vec3 position)
+{
+	chunks.erase(chunks.begin() + getChunkAt(position));
 }

@@ -5,8 +5,7 @@
 #include "PerlinNoise.hpp"
 
 
-const int WORLD_SIZE = 10; //in chunks
-const int WORLD_HEIGHT = 1; //in chunks
+const int MAX_CHUNKS = 10;
 
 
 class World
@@ -19,6 +18,8 @@ public:
 
 	void render(Camera & cam);
 
+	void updateChunks(Camera & cam);
+
 private:
 	long worldSizeBlocks;
 
@@ -27,5 +28,7 @@ private:
 	int getChunkAt(glm::vec3 position);
 
 	void loadChunk(glm::vec3 position);
+	bool isChunkLoaded(glm::vec3 position);
+	void unloadChunk(glm::vec3 position);
 };
 
