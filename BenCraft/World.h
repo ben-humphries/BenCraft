@@ -18,7 +18,7 @@ public:
 
 	void render(Camera & cam);
 
-	void updateChunks(Camera & cam);
+	void updateChunks(Camera * cam);
 
 private:
 	long worldSizeBlocks;

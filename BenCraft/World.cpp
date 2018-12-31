@@ -38,9 +38,9 @@ void World::render(Camera & cam)
 	}
 }
 
-void World::updateChunks(Camera & cam)
+void World::updateChunks(Camera * cam)
 {
-	glm::vec3 cameraPos = cam.getPosition();
+	glm::vec3 cameraPos = cam->getPosition();
 
 	int c_x;
 	int c_z;
@@ -63,7 +63,7 @@ void World::updateChunks(Camera & cam)
 
 	if (chunks.size() > MAX_CHUNKS) {
 		//remove furthest chunk
-		std::map<float, int> sorted = sortChunksByDistanceToCamera(cam);
+		std::map<float, int> sorted = sortChunksByDistanceToCamera(*cam);
 
 		if (glm::distance(chunkPos, chunks[sorted.rbegin()->second].position) > SQRT_MAX_CHUNKS / 2 * ROOT_TWO) {
 			unloadChunk(sorted.rbegin()->second);

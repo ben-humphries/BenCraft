@@ -22,7 +22,7 @@
 
 void processInput(sf::Window &window);
 
-Camera camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
+Camera * camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 bool gameFocused = true;
 
@@ -118,9 +118,9 @@ int main()
 		world.updateChunks(camera);
 
 		skybox.bindCubeMapTexture();
-		skybox.render(camera);
+		skybox.render(*camera);
 		textureAtlas.bind();
-		world.render(camera);
+		world.render(*camera);
 
 
 		window.display();
@@ -135,22 +135,22 @@ int main()
 void processInput(sf::Window &window) {
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		camera.fpKeyboardMove(FORWARD);
+		camera->fpKeyboardMove(FORWARD);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		camera.fpKeyboardMove(LEFT);
+		camera->fpKeyboardMove(LEFT);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		camera.fpKeyboardMove(BACKWARD);
+		camera->fpKeyboardMove(BACKWARD);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		camera.fpKeyboardMove(RIGHT);
+		camera->fpKeyboardMove(RIGHT);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		camera.fpKeyboardMove(UP);
+		camera->fpKeyboardMove(UP);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-		camera.fpKeyboardMove(DOWN);
+		camera->fpKeyboardMove(DOWN);
 	}
 
 	//to fix beginning offset, set mouse position to centerScreen on init
@@ -158,6 +158,6 @@ void processInput(sf::Window &window) {
 	sf::Vector2i centerScreen = sf::Vector2i(windowPos.x + WINDOW_WIDTH / 2, windowPos.y + WINDOW_HEIGHT / 2);
 
 	sf::Vector2i currentPos = sf::Mouse::getPosition() - centerScreen;
-	camera.fpMouseMove(currentPos.x, -currentPos.y);
+	camera->fpMouseMove(currentPos.x, -currentPos.y);
 	sf::Mouse::setPosition(centerScreen);
 }
