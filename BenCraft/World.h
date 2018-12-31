@@ -5,8 +5,8 @@
 #include "PerlinNoise.hpp"
 
 
-const int MAX_CHUNKS = 10;
-
+const int MAX_CHUNKS = 16;
+const int SQRT_MAX_CHUNKS = glm::sqrt(MAX_CHUNKS);
 
 class World
 {

@@ -6,62 +6,10 @@ double freq = 2;
 int octaves = 2;
 int waterLevel = 13;
 
+const float ROOT_TWO = 1.4142135623730950488016887242097;
+
 World::World()
 {
-	/*for (int i = 0; i < WORLD_SIZE; i++) {
-		for (int k = 0; k < WORLD_SIZE; k++) {
-			Chunk c;
-			c.setPosition(glm::vec3(i, 0, k));
-			chunks.push_back(c);
-		}
-	}
-
-	worldSizeBlocks = WORLD_SIZE * Chunk::getChunkSize();
-
-	//loop through all x and z
-	//get the height at the xz
-	//start at maxheight -1, fill with air until height
-	//after height, fill with dirt.
-
-	for (int x = 0; x < worldSizeBlocks; x++) {
-		for (int z = 0; z < worldSizeBlocks; z++) {
-			int h = getHeightAtXZ(glm::vec2(x, z));
-
-			//get chunk that x z is in
-			int c_x, c_z;
-			c_x = x / CHUNK_SIZE;
-			c_z = z / CHUNK_SIZE;
-
-			int index = getChunkAt(glm::vec3(c_x, 0, c_z));
-
-			for (int y = 0; y < CHUNK_HEIGHT; y++) {
-				if (y < h) {
-					if (y == h - 1 && y >= waterLevel) {
-						chunks[index].blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_GRASS);
-					}
-					else {
-						chunks[index].blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_DIRT);
-					}
-				}
-				else if (y <= waterLevel) {
-					chunks[index].blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_WATER);
-				}
-			}
-
-
-		}
-	}
-
-	for (int i = 0; i < chunks.size(); i++) {
-		chunks[i].generateMesh();
-	}*/
-
-	/*for (int x = -4; x < 5; x++) {
-		for (int z = -4; z < 5; z++) {
-			loadChunk(glm::vec3(x, 0, z));
-		}
-	}*/
-
 }
 
 
@@ -89,34 +37,58 @@ void World::updateChunks(Camera & cam)
 {
 	glm::vec3 cameraPos = cam.getPosition();
 
+	int c_x;
+	int c_z;
+
+	if (cameraPos.x < 0) {
+		c_x = (cameraPos.x - CHUNK_SIZE) / CHUNK_SIZE;
+	}
+	else {
+		c_x = cameraPos.x / CHUNK_SIZE;
+	}
+
+	if (cameraPos.z < 0) {
+		c_z = (cameraPos.z - CHUNK_SIZE) / CHUNK_SIZE;
+	}
+	else {
+		c_z = cameraPos.z / CHUNK_SIZE;
+	}
+
+	glm::vec3 chunkPos(c_x, 0, c_z);
+
 	if (chunks.size() > MAX_CHUNKS) {
 		//remove furthest chunk
 		std::map<float, int> sorted = sortChunksByDistanceToCamera(cam);
-		unloadChunk(sorted.rbegin()->second);
+
+		if (glm::distance(chunkPos, chunks[sorted.rbegin()->second].position) > SQRT_MAX_CHUNKS / 2 * ROOT_TWO) {
+			unloadChunk(sorted.rbegin()->second);
+		}
+		
+
 	}
 	else {
-		int c_x;
-		int c_z;
+		
+		int x, y, dx, dy;
+		x = y = dx = 0;
+		dy = -1;
+		int t = SQRT_MAX_CHUNKS;
+		int maxI = t * t;
+		for (int i = 0; i < maxI; i++) {
+			if ((-SQRT_MAX_CHUNKS / 2 <= x) && (x <= SQRT_MAX_CHUNKS / 2) && (-SQRT_MAX_CHUNKS / 2 <= y) && (y <= SQRT_MAX_CHUNKS / 2)) {
+				glm::vec3 pos(chunkPos.x + x, 0, chunkPos.z + y);
 
-		if (cameraPos.x < 0) {
-			c_x = (cameraPos.x - CHUNK_SIZE) / CHUNK_SIZE;
-		}
-		else {
-			c_x = cameraPos.x / CHUNK_SIZE;
-		}
-
-		if (cameraPos.z < 0) {
-			c_z = (cameraPos.z - CHUNK_SIZE) / CHUNK_SIZE;
-		}
-		else {
-			c_z = cameraPos.z / CHUNK_SIZE;
-		}
-
-		glm::vec3 chunkPos(c_x, 0, c_z);
-
-		if (!isChunkLoaded(chunkPos)) {
-			printf("%i  %i  %i|||", c_x, 0, c_z);
-			loadChunk(chunkPos);
+				if (!isChunkLoaded(pos)) {
+					loadChunk(pos);
+					break;
+				}
+			}
+			if ((x == y) || ((x < 0) && (x == -y)) || ((x > 0) && (x == 1 - y))) {
+				t = dx;
+				dx = -dy;
+				dy = t;
+			}
+			x += dx;
+			y += dy;
 		}
 	}
 
