@@ -8,7 +8,7 @@
 #include <mutex>
 
 
-const int MAX_CHUNKS = 16;
+const int MAX_CHUNKS = 128;
 const int SQRT_MAX_CHUNKS = glm::sqrt(MAX_CHUNKS);
 
 class World

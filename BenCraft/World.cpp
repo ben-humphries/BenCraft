@@ -45,7 +45,6 @@ void World::render(Camera & cam)
 
 void World::updateChunks(Camera * cam)
 {
-
 	while (true) {
 		mutex.lock();
 		glm::vec3 cameraPos = cam->getPosition();
@@ -129,6 +128,8 @@ int World::getHeightAtXZ(glm::vec2 position)
 int World::getChunkAt(glm::vec3 position)
 {
 	for (int i = 0; i < chunks.size(); i++) {
+		if (!isChunkLoaded(i))
+			continue;
 
 		if (position == chunks[i].position) {
 			return i;
@@ -188,28 +189,30 @@ bool World::isChunkLoaded(int index)
 	if (index != -1 && chunks[index].loaded) {
 		return true;
 	}
-	/*if (index != -1) {
-		return true;
-	}*/
 	return false;
 }
 
 void World::unloadChunk(glm::vec3 position)
 {
-	chunks[getChunkAt(position)].cleanup();
-	chunks.erase(chunks.begin() + getChunkAt(position));
+	int index = getChunkAt(position);
+	unloadChunk(index);
 }
 
 void World::unloadChunk(int index)
 {
-	chunks[index].cleanup();
-	chunks.erase(chunks.begin() + index);
+	if (isChunkLoaded(index)) {
+		chunks[index].cleanup();
+		chunks.erase(chunks.begin() + index);
+	}
+
 }
 std::map<float, int> World::sortChunksByDistanceToCamera(Camera & cam)
 {
 	std::map<float, int> sorted;
 	for (unsigned int i = 0; i < chunks.size(); i++)
 	{
+		if (!isChunkLoaded(i))
+			continue;
 		glm::vec3 b_position = glm::vec3(chunks[i].position.x * CHUNK_SIZE + CHUNK_SIZE / 2,
 										chunks[i].position.y * CHUNK_HEIGHT + CHUNK_SIZE / 2,
 										chunks[i].position.z * CHUNK_SIZE + CHUNK_SIZE / 2);
