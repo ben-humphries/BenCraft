@@ -59,6 +59,7 @@ World::World()
 	loadChunk(glm::vec3(0, 0, 0));
 	loadChunk(glm::vec3(1, 0, 0));
 	loadChunk(glm::vec3(0, 0, 1));
+	loadChunk(glm::vec3(1, 0, 1));
 
 }
 
@@ -120,8 +121,8 @@ void World::loadChunk(glm::vec3 position)
 	Chunk c;
 	c.setPosition(position);
 
-	for (int x = 0; x < x_start + CHUNK_SIZE; x++) {
-		for (int z = 0; z < z_start + CHUNK_SIZE; z++) {
+	for (int x = x_start; x < x_start + CHUNK_SIZE; x++) {
+		for (int z = z_start; z < z_start + CHUNK_SIZE; z++) {
 			int h = getHeightAtXZ(glm::vec2(x, z));
 
 			for (int y = 0; y < CHUNK_HEIGHT; y++) {
