@@ -19,7 +19,8 @@ public:
 	void initializeBlocks();
 	//void addBlock(BlockType type, )
 	void generateMesh();
-	void render(Camera &cam);
+	void renderTerrain(Camera &cam);
+	void renderWater(Camera &cam);
 	void setPosition(glm::vec3 position);
 
 	glm::vec3 position;

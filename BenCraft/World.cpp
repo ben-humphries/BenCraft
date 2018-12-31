@@ -6,6 +6,12 @@ double freq = 2;
 int octaves = 2;
 int waterLevel = 13;
 
+/*
+- dont add any edge faces to chunks, but store what blocks are edge blocks in a list in each chunk
+- after chunk meshes are generated (and more importantly, all blocks have been set), loop through each chunk
+- check for adjacent chunks
+*/
+
 World::World()
 {
 	for (int i = 0; i < WORLD_SIZE; i++) {
@@ -64,8 +70,22 @@ World::~World()
 
 void World::render(Camera & cam)
 {
+
 	for (int i = 0; i < chunks.size(); i++) {
-		chunks[i].render(cam);
+		chunks[i].renderTerrain(cam);
+	}
+
+	//Sort the transparent meshes and render them last to first.
+	std::map<float, int> sorted;
+	for (unsigned int i = 0; i < chunks.size(); i++)
+	{
+		float distance = glm::length(cam.getPosition() - chunks[i].position);
+		sorted[distance] = i;
+	}
+
+	for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
+	{
+		chunks[it->second].renderWater(cam);
 	}
 }
 

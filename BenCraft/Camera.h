@@ -39,6 +39,7 @@ public:
 	void fpKeyboardMove(MoveCamera direction);
 	void fpMouseMove(float dx, float dy, bool constrainPitch = true);
 
+	glm::vec3 getPosition();
 
 private:
 

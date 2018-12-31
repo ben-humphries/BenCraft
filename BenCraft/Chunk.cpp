@@ -108,13 +108,17 @@ void Chunk::generateMesh()
 		for (int j = 0; j < CHUNK_HEIGHT; j++) {
 			for (int k = 0; k < CHUNK_SIZE; k++) {
 
-				tryAddFace(frontFace, i, j, k, i, j, k - 1, blocks[i][j][k].textureOffsets.frontFace);
-				tryAddFace(backFace, i, j, k, i, j, k + 1, blocks[i][j][k].textureOffsets.backFace);
-				tryAddFace(leftFace, i, j, k, i + 1, j, k, blocks[i][j][k].textureOffsets.leftFace);
-				tryAddFace(rightFace, i, j, k, i - 1, j, k, blocks[i][j][k].textureOffsets.rightFace);
-				tryAddFace(bottomFace, i, j, k, i, j - 1, k, blocks[i][j][k].textureOffsets.bottomFace);
-				tryAddFace(topFace, i, j, k, i, j + 1, k, blocks[i][j][k].textureOffsets.topFace);
-
+				if (blocks[i][j][k].type == BLOCKTYPE_WATER) {
+					tryAddFace(topFace, i, j, k, i, j + 1, k, blocks[i][j][k].textureOffsets.topFace);
+				}
+				else {
+					tryAddFace(frontFace, i, j, k, i, j, k - 1, blocks[i][j][k].textureOffsets.frontFace);
+					tryAddFace(backFace, i, j, k, i, j, k + 1, blocks[i][j][k].textureOffsets.backFace);
+					tryAddFace(leftFace, i, j, k, i + 1, j, k, blocks[i][j][k].textureOffsets.leftFace);
+					tryAddFace(rightFace, i, j, k, i - 1, j, k, blocks[i][j][k].textureOffsets.rightFace);
+					tryAddFace(bottomFace, i, j, k, i, j - 1, k, blocks[i][j][k].textureOffsets.bottomFace);
+					tryAddFace(topFace, i, j, k, i, j + 1, k, blocks[i][j][k].textureOffsets.topFace);
+				}
 			}
 		}
 	}
@@ -139,7 +143,7 @@ void Chunk::generateMesh()
 	addMeshToVAO(waterVAO, waterMesh);
 }
 
-void Chunk::render(Camera & cam)
+void Chunk::renderTerrain(Camera & cam)
 {
 	glBindVertexArray(terrainVAO);
 
@@ -150,10 +154,15 @@ void Chunk::render(Camera & cam)
 
 	glDrawArrays(GL_TRIANGLES, 0, terrainMesh.size() / 5); // mesh.size() * 3 / 5 (to get rid of texCoords) then / 3 for numTriangles
 
+}
+void Chunk::renderWater(Camera & cam)
+{
+
 	glBindVertexArray(waterVAO);
 
 	waterShader.use();
 
+	glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;// model;
 	waterShader.setMat4("transform", trans);
 
 	glDrawArrays(GL_TRIANGLES, 0, waterMesh.size() / 5);
@@ -205,7 +214,7 @@ void Chunk::tryAddFace(const float face[18], int i, int j, int k, int adj_i, int
 		}
 	}
 	else {
-		return;
+		//return;
 	}
 
 	//addFace

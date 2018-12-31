@@ -5,7 +5,7 @@ Camera::Camera(float windowWidth, float windowHeight)
 	this->windowWidth = windowWidth;
 	this->windowHeight = windowHeight;
 
-	projection = glm::perspective(glm::radians(45.0f), windowWidth / windowHeight, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(45.0f), windowWidth / windowHeight, 0.1f, 300.0f);
 
 	updateCameraAttributes();
 }
@@ -75,6 +75,11 @@ void Camera::fpMouseMove(float dx, float dy, bool constrainPitch)
 	}
 
 	updateCameraAttributes();
+}
+
+glm::vec3 Camera::getPosition()
+{
+	return cameraPos;
 }
 
 void Camera::updateCameraAttributes() {
