@@ -23,6 +23,9 @@ public:
 	void renderWater(Camera &cam);
 	void setPosition(glm::vec3 position);
 
+	void bindMeshesToVAO();
+	bool meshesBoundToVAO = false;
+
 	void cleanup();
 
 	glm::vec3 position;

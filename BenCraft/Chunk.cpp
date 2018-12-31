@@ -134,13 +134,8 @@ void Chunk::generateMesh()
 		waterShaderInitialized = true;
 	}
 
-	if (terrainVAO == 0)
-		glGenVertexArrays(1, &terrainVAO);
-	if (waterVAO == 0)
-		glGenVertexArrays(1, &waterVAO);
+	//////////////////////////DO ALL OF THIS IN A SEPARATE PUBLIC METHOD. NOTHING OPENGL CAN HAPPEN ON THE MESH GEN THREAD////////////////////////
 
-	addMeshToVAO(terrainVAO, terrainVBO, terrainMesh);
-	addMeshToVAO(waterVAO, terrainVBO, waterMesh);
 }
 
 void Chunk::renderTerrain(Camera & cam)
@@ -175,6 +170,19 @@ void Chunk::setPosition(glm::vec3 position)
 
 	glm::vec3 b_position = glm::vec3(position.x * CHUNK_SIZE, position.y * CHUNK_HEIGHT, position.z * CHUNK_SIZE);
 	model = glm::translate(model, b_position);
+}
+
+void Chunk::bindMeshesToVAO()
+{
+	if (terrainVAO == 0)
+		glGenVertexArrays(1, &terrainVAO);
+	if (waterVAO == 0)
+		glGenVertexArrays(1, &waterVAO);
+
+	addMeshToVAO(terrainVAO, terrainVBO, terrainMesh);
+	addMeshToVAO(waterVAO, terrainVBO, waterMesh);
+
+	meshesBoundToVAO = true;
 }
 
 int Chunk::getChunkSize()
@@ -252,6 +260,10 @@ void Chunk::addToMesh(std::vector<float> & mesh, const float vertices[18], float
 
 void Chunk::addMeshToVAO(unsigned int vao, unsigned int vbo, std::vector<float> mesh)
 {
+
+	if (vao == 0)
+		glGenVertexArrays(1, &vao);
+
 	glBindVertexArray(vao);
 
 	//initialize vertex buffer object

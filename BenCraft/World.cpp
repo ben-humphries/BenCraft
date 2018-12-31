@@ -21,6 +21,11 @@ void World::render(Camera & cam)
 {
 
 	for (int i = 0; i < chunks.size(); i++) {
+
+		if (!chunks[i].meshesBoundToVAO) {
+			chunks[i].bindMeshesToVAO();
+		}
+
 		chunks[i].renderTerrain(cam);
 	}
 
