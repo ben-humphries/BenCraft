@@ -25,5 +25,7 @@ private:
 	int getHeightAtXZ(glm::vec2 position);
 
 	int getChunkAt(glm::vec3 position);
+
+	void loadChunk(glm::vec3 position);
 };
 

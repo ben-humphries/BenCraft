@@ -8,7 +8,7 @@ int waterLevel = 13;
 
 World::World()
 {
-	for (int i = 0; i < WORLD_SIZE; i++) {
+	/*for (int i = 0; i < WORLD_SIZE; i++) {
 		for (int k = 0; k < WORLD_SIZE; k++) {
 			Chunk c;
 			c.setPosition(glm::vec3(i, 0, k));
@@ -54,7 +54,12 @@ World::World()
 
 	for (int i = 0; i < chunks.size(); i++) {
 		chunks[i].generateMesh();
-	}
+	}*/
+
+	loadChunk(glm::vec3(0, 0, 0));
+	loadChunk(glm::vec3(1, 0, 0));
+	loadChunk(glm::vec3(0, 0, 1));
+
 }
 
 
@@ -105,4 +110,39 @@ int World::getChunkAt(glm::vec3 position)
 	}
 
 	return -1;
+}
+
+void World::loadChunk(glm::vec3 position)
+{
+	int x_start = position.x * CHUNK_SIZE;
+	int z_start = position.z * CHUNK_SIZE;
+
+	Chunk c;
+	c.setPosition(position);
+
+	for (int x = 0; x < x_start + CHUNK_SIZE; x++) {
+		for (int z = 0; z < z_start + CHUNK_SIZE; z++) {
+			int h = getHeightAtXZ(glm::vec2(x, z));
+
+			for (int y = 0; y < CHUNK_HEIGHT; y++) {
+				if (y < h) {
+					if (y == h - 1 && y >= waterLevel) {
+						c.blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_GRASS);
+					}
+					else {
+						c.blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_DIRT);
+					}
+				}
+				else if (y <= waterLevel) {
+					c.blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE].setType(BLOCKTYPE_WATER);
+				}
+			}
+
+
+		}
+	}
+
+	c.generateMesh();
+
+	chunks.push_back(c);
 }
