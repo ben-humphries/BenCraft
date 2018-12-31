@@ -5,7 +5,7 @@
 #include "PerlinNoise.hpp"
 
 
-const int MAX_CHUNKS = 10;
+const int MAX_CHUNKS = 1;
 
 
 class World
@@ -30,5 +30,8 @@ private:
 	void loadChunk(glm::vec3 position);
 	bool isChunkLoaded(glm::vec3 position);
 	void unloadChunk(glm::vec3 position);
+	void unloadChunk(int index);
+
+	std::map<float, int> sortChunksByDistanceToCamera(Camera & cam);
 };
 

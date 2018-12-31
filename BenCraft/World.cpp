@@ -77,12 +77,7 @@ void World::render(Camera & cam)
 	}
 
 	//Sort the transparent meshes and render them last to first.
-	std::map<float, int> sorted;
-	for (unsigned int i = 0; i < chunks.size(); i++)
-	{
-		float distance = glm::length(cam.getPosition() - chunks[i].position);
-		sorted[distance] = i;
-	}
+	std::map<float, int> sorted = sortChunksByDistanceToCamera(cam);
 
 	for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
 	{
@@ -96,30 +91,34 @@ void World::updateChunks(Camera & cam)
 
 	if (chunks.size() > MAX_CHUNKS) {
 		//remove furthest chunk
-	}
-
-	int c_x;
-	int c_z;
-
-	if (cameraPos.x < 0) {
-		c_x = (cameraPos.x - CHUNK_SIZE) / CHUNK_SIZE;
+		std::map<float, int> sorted = sortChunksByDistanceToCamera(cam);
+		unloadChunk(sorted.rbegin()->second);
 	}
 	else {
-		c_x = cameraPos.x / CHUNK_SIZE;
+		int c_x;
+		int c_z;
+
+		if (cameraPos.x < 0) {
+			c_x = (cameraPos.x - CHUNK_SIZE) / CHUNK_SIZE;
+		}
+		else {
+			c_x = cameraPos.x / CHUNK_SIZE;
+		}
+
+		if (cameraPos.z < 0) {
+			c_z = (cameraPos.z - CHUNK_SIZE) / CHUNK_SIZE;
+		}
+		else {
+			c_z = cameraPos.z / CHUNK_SIZE;
+		}
+
+		glm::vec3 chunkPos(c_x, 0, c_z);
+
+		if (!isChunkLoaded(chunkPos)) {
+			loadChunk(chunkPos);
+		}
 	}
 
-	if (cameraPos.z < 0) {
-		c_z = (cameraPos.z - CHUNK_SIZE) / CHUNK_SIZE;
-	}
-	else {
-		c_z = cameraPos.z / CHUNK_SIZE;
-	}
-
-	glm::vec3 chunkPos(c_x, 0, c_z);
-
-	if (!isChunkLoaded(chunkPos)) {
-		loadChunk(chunkPos);
-	}
 }
 
 int World::getHeightAtXZ(glm::vec2 position)
@@ -197,4 +196,21 @@ bool World::isChunkLoaded(glm::vec3 position)
 void World::unloadChunk(glm::vec3 position)
 {
 	chunks.erase(chunks.begin() + getChunkAt(position));
+}
+
+void World::unloadChunk(int index)
+{
+	chunks.erase(chunks.begin() + index);
+}
+std::map<float, int> World::sortChunksByDistanceToCamera(Camera & cam)
+{
+	std::map<float, int> sorted;
+	for (unsigned int i = 0; i < chunks.size(); i++)
+	{
+		glm::vec3 b_position = glm::vec3(chunks[i].position.x * CHUNK_SIZE, chunks[i].position.y * CHUNK_HEIGHT, chunks[i].position.z * CHUNK_SIZE);
+		float distance = glm::length(cam.getPosition() - b_position);
+		sorted[distance] = i;
+	}
+
+	return sorted;
 }
