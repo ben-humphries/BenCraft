@@ -196,11 +196,13 @@ bool World::isChunkLoaded(glm::vec3 position)
 
 void World::unloadChunk(glm::vec3 position)
 {
+	chunks[getChunkAt(position)].cleanup();
 	chunks.erase(chunks.begin() + getChunkAt(position));
 }
 
 void World::unloadChunk(int index)
 {
+	chunks[index].cleanup();
 	chunks.erase(chunks.begin() + index);
 }
 std::map<float, int> World::sortChunksByDistanceToCamera(Camera & cam)

@@ -5,7 +5,7 @@
 #include "PerlinNoise.hpp"
 
 
-const int MAX_CHUNKS = 1;
+const int MAX_CHUNKS = 10;
 
 
 class World

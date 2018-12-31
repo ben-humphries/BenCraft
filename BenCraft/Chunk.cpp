@@ -139,8 +139,8 @@ void Chunk::generateMesh()
 	if (waterVAO == 0)
 		glGenVertexArrays(1, &waterVAO);
 
-	addMeshToVAO(terrainVAO, terrainMesh);
-	addMeshToVAO(waterVAO, waterMesh);
+	addMeshToVAO(terrainVAO, terrainVBO, terrainMesh);
+	addMeshToVAO(waterVAO, terrainVBO, waterMesh);
 }
 
 void Chunk::renderTerrain(Camera & cam)
@@ -250,12 +250,11 @@ void Chunk::addToMesh(std::vector<float> & mesh, const float vertices[18], float
 	}
 }
 
-void Chunk::addMeshToVAO(unsigned int vao, std::vector<float> mesh)
+void Chunk::addMeshToVAO(unsigned int vao, unsigned int vbo, std::vector<float> mesh)
 {
 	glBindVertexArray(vao);
 
 	//initialize vertex buffer object
-	unsigned int vbo;
 	glGenBuffers(1, &vbo);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -272,5 +271,14 @@ void Chunk::addMeshToVAO(unsigned int vao, std::vector<float> mesh)
 	glEnableVertexAttribArray(1);
 }
 
+void Chunk::cleanup() {
+	glBindVertexArray(terrainVAO);
+	glDeleteBuffers(1, &terrainVBO);
+	glBindVertexArray(waterVAO);
+	glDeleteBuffers(1, &waterVBO);
+
+	glDeleteVertexArrays(1, &terrainVAO);
+	glDeleteVertexArrays(1, &waterVAO);
+}
 
 
