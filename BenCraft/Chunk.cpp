@@ -124,16 +124,6 @@ void Chunk::generateMesh()
 	}
 	//test each face by comparing to adjacent block
 
-	if (!textureShaderInitialized) {
-		textureShader = Shader("vertex.glsl", "fragment.glsl");
-		textureShaderInitialized = true;
-	}
-
-	if (!waterShaderInitialized) {
-		waterShader = Shader("vertex.glsl", "water_fragment.glsl");
-		waterShaderInitialized = true;
-	}
-
 	//////////////////////////DO ALL OF THIS IN A SEPARATE PUBLIC METHOD. NOTHING OPENGL CAN HAPPEN ON THE MESH GEN THREAD////////////////////////
 
 }
@@ -174,6 +164,18 @@ void Chunk::setPosition(glm::vec3 position)
 
 void Chunk::bindMeshesToVAO()
 {
+
+	if (!textureShaderInitialized) {
+		textureShader = Shader("vertex.glsl", "fragment.glsl");
+		textureShaderInitialized = true;
+	}
+
+	if (!waterShaderInitialized) {
+		waterShader = Shader("vertex.glsl", "water_fragment.glsl");
+		waterShaderInitialized = true;
+	}
+
+
 	if (terrainVAO == 0)
 		glGenVertexArrays(1, &terrainVAO);
 	if (waterVAO == 0)

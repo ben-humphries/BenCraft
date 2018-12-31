@@ -8,8 +8,9 @@ int waterLevel = 13;
 
 const float ROOT_TWO = 1.4142135623730950488016887242097;
 
-World::World()
+World::World(Camera * cam)
 {
+	startUpdatingChunks(cam);
 }
 
 
@@ -40,63 +41,71 @@ void World::render(Camera & cam)
 
 void World::updateChunks(Camera * cam)
 {
-	glm::vec3 cameraPos = cam->getPosition();
 
-	int c_x;
-	int c_z;
+	while (true) {
+		glm::vec3 cameraPos = cam->getPosition();
 
-	if (cameraPos.x < 0) {
-		c_x = (cameraPos.x - CHUNK_SIZE) / CHUNK_SIZE;
-	}
-	else {
-		c_x = cameraPos.x / CHUNK_SIZE;
-	}
+		int c_x;
+		int c_z;
 
-	if (cameraPos.z < 0) {
-		c_z = (cameraPos.z - CHUNK_SIZE) / CHUNK_SIZE;
-	}
-	else {
-		c_z = cameraPos.z / CHUNK_SIZE;
-	}
-
-	glm::vec3 chunkPos(c_x, 0, c_z);
-
-	if (chunks.size() > MAX_CHUNKS) {
-		//remove furthest chunk
-		std::map<float, int> sorted = sortChunksByDistanceToCamera(*cam);
-
-		if (glm::distance(chunkPos, chunks[sorted.rbegin()->second].position) > SQRT_MAX_CHUNKS / 2 * ROOT_TWO) {
-			unloadChunk(sorted.rbegin()->second);
+		if (cameraPos.x < 0) {
+			c_x = (cameraPos.x - CHUNK_SIZE) / CHUNK_SIZE;
 		}
-		
+		else {
+			c_x = cameraPos.x / CHUNK_SIZE;
+		}
 
-	}
-	else {
-		
-		int x, y, dx, dy;
-		x = y = dx = 0;
-		dy = -1;
-		int t = SQRT_MAX_CHUNKS;
-		int maxI = t * t;
-		for (int i = 0; i < maxI; i++) {
-			if ((-SQRT_MAX_CHUNKS / 2 <= x) && (x <= SQRT_MAX_CHUNKS / 2) && (-SQRT_MAX_CHUNKS / 2 <= y) && (y <= SQRT_MAX_CHUNKS / 2)) {
-				glm::vec3 pos(chunkPos.x + x, 0, chunkPos.z + y);
+		if (cameraPos.z < 0) {
+			c_z = (cameraPos.z - CHUNK_SIZE) / CHUNK_SIZE;
+		}
+		else {
+			c_z = cameraPos.z / CHUNK_SIZE;
+		}
 
-				if (!isChunkLoaded(pos)) {
-					loadChunk(pos);
-					break;
+		glm::vec3 chunkPos(c_x, 0, c_z);
+
+		if (chunks.size() > MAX_CHUNKS) {
+			//remove furthest chunk
+			std::map<float, int> sorted = sortChunksByDistanceToCamera(*cam);
+
+			if (glm::distance(chunkPos, chunks[sorted.rbegin()->second].position) > SQRT_MAX_CHUNKS / 2 * ROOT_TWO) {
+				unloadChunk(sorted.rbegin()->second);
+			}
+
+
+		}
+		else {
+
+			int x, y, dx, dy;
+			x = y = dx = 0;
+			dy = -1;
+			int t = SQRT_MAX_CHUNKS;
+			int maxI = t * t;
+			for (int i = 0; i < maxI; i++) {
+				if ((-SQRT_MAX_CHUNKS / 2 <= x) && (x <= SQRT_MAX_CHUNKS / 2) && (-SQRT_MAX_CHUNKS / 2 <= y) && (y <= SQRT_MAX_CHUNKS / 2)) {
+					glm::vec3 pos(chunkPos.x + x, 0, chunkPos.z + y);
+
+					if (!isChunkLoaded(pos)) {
+						loadChunk(pos);
+						break;
+					}
 				}
+				if ((x == y) || ((x < 0) && (x == -y)) || ((x > 0) && (x == 1 - y))) {
+					t = dx;
+					dx = -dy;
+					dy = t;
+				}
+				x += dx;
+				y += dy;
 			}
-			if ((x == y) || ((x < 0) && (x == -y)) || ((x > 0) && (x == 1 - y))) {
-				t = dx;
-				dx = -dy;
-				dy = t;
-			}
-			x += dx;
-			y += dy;
 		}
 	}
 
+}
+
+void World::startUpdatingChunks(Camera * cam) {
+
+	update_chunks_thread = std::thread(&World::updateChunks, this, cam);
 }
 
 int World::getHeightAtXZ(glm::vec2 position)

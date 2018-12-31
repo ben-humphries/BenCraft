@@ -4,6 +4,8 @@
 #include "Camera.h"
 #include "PerlinNoise.hpp"
 
+#include <thread>
+
 
 const int MAX_CHUNKS = 16;
 const int SQRT_MAX_CHUNKS = glm::sqrt(MAX_CHUNKS);
@@ -11,17 +13,19 @@ const int SQRT_MAX_CHUNKS = glm::sqrt(MAX_CHUNKS);
 class World
 {
 public:
-	World();
+	World(Camera * cam);
 	~World();
 
 	std::vector<Chunk> chunks;
 
 	void render(Camera & cam);
 
-	void updateChunks(Camera * cam);
 
 private:
 	long worldSizeBlocks;
+
+	void updateChunks(Camera * cam);
+	void startUpdatingChunks(Camera * cam);
 
 	int getHeightAtXZ(glm::vec2 position);
 
@@ -33,5 +37,7 @@ private:
 	void unloadChunk(int index);
 
 	std::map<float, int> sortChunksByDistanceToCamera(Camera & cam);
+
+	std::thread update_chunks_thread;
 };
 

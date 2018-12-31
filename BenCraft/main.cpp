@@ -49,7 +49,7 @@ int main()
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	World world;
+	World world(camera);
 	Skybox skybox;
 	TextureAtlas textureAtlas;
 
@@ -114,8 +114,6 @@ int main()
 		}
 
 		clock.restart();
-
-		world.updateChunks(camera);
 
 		skybox.bindCubeMapTexture();
 		skybox.render(*camera);
