@@ -115,6 +115,8 @@ int main()
 
 		clock.restart();
 
+		world.updateChunks(camera);
+
 		skybox.bindCubeMapTexture();
 		skybox.render(camera);
 		textureAtlas.bind();

@@ -56,11 +56,11 @@ World::World()
 		chunks[i].generateMesh();
 	}*/
 
-	for (int x = -4; x < 5; x++) {
+	/*for (int x = -4; x < 5; x++) {
 		for (int z = -4; z < 5; z++) {
 			loadChunk(glm::vec3(x, 0, z));
 		}
-	}
+	}*/
 
 }
 
@@ -98,7 +98,24 @@ void World::updateChunks(Camera & cam)
 		//remove furthest chunk
 	}
 
-	glm::vec3 chunkPos(cameraPos.x / CHUNK_SIZE, 0, cameraPos.z / CHUNK_SIZE);
+	int c_x;
+	int c_z;
+
+	if (cameraPos.x < 0) {
+		c_x = (cameraPos.x - CHUNK_SIZE) / CHUNK_SIZE;
+	}
+	else {
+		c_x = cameraPos.x / CHUNK_SIZE;
+	}
+
+	if (cameraPos.z < 0) {
+		c_z = (cameraPos.z - CHUNK_SIZE) / CHUNK_SIZE;
+	}
+	else {
+		c_z = cameraPos.z / CHUNK_SIZE;
+	}
+
+	glm::vec3 chunkPos(c_x, 0, c_z);
 
 	if (!isChunkLoaded(chunkPos)) {
 		loadChunk(chunkPos);
