@@ -6,12 +6,6 @@ double freq = 2;
 int octaves = 2;
 int waterLevel = 13;
 
-/*
-- dont add any edge faces to chunks, but store what blocks are edge blocks in a list in each chunk
-- after chunk meshes are generated (and more importantly, all blocks have been set), loop through each chunk
-- check for adjacent chunks
-*/
-
 World::World()
 {
 	for (int i = 0; i < WORLD_SIZE; i++) {
