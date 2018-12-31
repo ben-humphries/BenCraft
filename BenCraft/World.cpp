@@ -115,6 +115,7 @@ void World::updateChunks(Camera & cam)
 		glm::vec3 chunkPos(c_x, 0, c_z);
 
 		if (!isChunkLoaded(chunkPos)) {
+			printf("%i  %i  %i|||", c_x, 0, c_z);
 			loadChunk(chunkPos);
 		}
 	}
@@ -207,7 +208,9 @@ std::map<float, int> World::sortChunksByDistanceToCamera(Camera & cam)
 	std::map<float, int> sorted;
 	for (unsigned int i = 0; i < chunks.size(); i++)
 	{
-		glm::vec3 b_position = glm::vec3(chunks[i].position.x * CHUNK_SIZE, chunks[i].position.y * CHUNK_HEIGHT, chunks[i].position.z * CHUNK_SIZE);
+		glm::vec3 b_position = glm::vec3(chunks[i].position.x * CHUNK_SIZE + CHUNK_SIZE / 2,
+										chunks[i].position.y * CHUNK_HEIGHT + CHUNK_SIZE / 2,
+										chunks[i].position.z * CHUNK_SIZE + CHUNK_SIZE / 2);
 		float distance = glm::length(cam.getPosition() - b_position);
 		sorted[distance] = i;
 	}
