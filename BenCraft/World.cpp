@@ -47,6 +47,7 @@ void World::updateChunks(Camera * cam)
 {
 
 	while (true) {
+		mutex.lock();
 		glm::vec3 cameraPos = cam->getPosition();
 
 		int c_x;
@@ -103,6 +104,7 @@ void World::updateChunks(Camera * cam)
 				y += dy;
 			}
 		}
+		mutex.unlock();
 	}
 
 }

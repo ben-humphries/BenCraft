@@ -5,6 +5,7 @@
 #include "PerlinNoise.hpp"
 
 #include <thread>
+#include <mutex>
 
 
 const int MAX_CHUNKS = 16;
@@ -40,5 +41,6 @@ private:
 	std::map<float, int> sortChunksByDistanceToCamera(Camera & cam);
 
 	std::thread update_chunks_thread;
+	std::mutex mutex;
 };
 
