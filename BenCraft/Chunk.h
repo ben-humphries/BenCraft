@@ -26,6 +26,8 @@ public:
 	void bindMeshesToVAO();
 	bool meshesBoundToVAO = false;
 
+	bool loaded = false;
+
 	void cleanup();
 
 	glm::vec3 position;

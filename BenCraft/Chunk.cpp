@@ -75,8 +75,6 @@ bool waterShaderInitialized = false;
 Chunk::Chunk()
 {
 	initializeBlocks();
-	generateMesh();
-
 }
 
 
@@ -125,7 +123,7 @@ void Chunk::generateMesh()
 	//test each face by comparing to adjacent block
 
 	//////////////////////////DO ALL OF THIS IN A SEPARATE PUBLIC METHOD. NOTHING OPENGL CAN HAPPEN ON THE MESH GEN THREAD////////////////////////
-
+	//loaded = true;
 }
 
 void Chunk::renderTerrain(Camera & cam)

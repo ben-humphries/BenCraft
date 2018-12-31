@@ -33,6 +33,7 @@ private:
 
 	void loadChunk(glm::vec3 position);
 	bool isChunkLoaded(glm::vec3 position);
+	bool isChunkLoaded(int index);
 	void unloadChunk(glm::vec3 position);
 	void unloadChunk(int index);
 

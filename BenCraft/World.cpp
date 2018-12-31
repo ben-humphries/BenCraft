@@ -22,12 +22,14 @@ void World::render(Camera & cam)
 {
 
 	for (int i = 0; i < chunks.size(); i++) {
+		if (isChunkLoaded(i)) {
+			if (!chunks[i].meshesBoundToVAO) {
+				chunks[i].bindMeshesToVAO();
+			}
 
-		if (!chunks[i].meshesBoundToVAO) {
-			chunks[i].bindMeshesToVAO();
+			chunks[i].renderTerrain(cam);
 		}
 
-		chunks[i].renderTerrain(cam);
 	}
 
 	//Sort the transparent meshes and render them last to first.
@@ -35,7 +37,9 @@ void World::render(Camera & cam)
 
 	for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
 	{
-		chunks[it->second].renderWater(cam);
+		if (isChunkLoaded(it->second)) {
+			chunks[it->second].renderWater(cam);
+		}
 	}
 }
 
@@ -166,18 +170,26 @@ void World::loadChunk(glm::vec3 position)
 	}
 
 	c.generateMesh();
-
+	c.loaded = true;
 	chunks.push_back(c);
 }
 
 bool World::isChunkLoaded(glm::vec3 position)
 {
-	if (getChunkAt(position) == -1) {
-		return false;
-	}
-	else {
+	int index = getChunkAt(position);
+	
+	return isChunkLoaded(index);
+}
+
+bool World::isChunkLoaded(int index)
+{
+	if (index != -1 && chunks[index].loaded) {
 		return true;
 	}
+	/*if (index != -1) {
+		return true;
+	}*/
+	return false;
 }
 
 void World::unloadChunk(glm::vec3 position)
