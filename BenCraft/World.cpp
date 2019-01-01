@@ -20,7 +20,39 @@ World::~World()
 
 void World::render(Camera & cam)
 {
-	mutex.lock();
+
+	glm::vec3 cameraPos = cam.getPosition();
+	int c_x;
+	int c_z;
+
+	if (cameraPos.x < 0) {
+		c_x = (cameraPos.x - CHUNK_SIZE) / CHUNK_SIZE;
+	}
+	else {
+		c_x = cameraPos.x / CHUNK_SIZE;
+	}
+
+	if (cameraPos.z < 0) {
+		c_z = (cameraPos.z - CHUNK_SIZE) / CHUNK_SIZE;
+	}
+	else {
+		c_z = cameraPos.z / CHUNK_SIZE;
+	}
+
+	glm::vec3 chunkPos(c_x, 0, c_z);
+
+	while (chunks.size() > MAX_CHUNKS) {
+		//remove furthest chunk
+		std::map<float, int> sorted = sortChunksByDistanceToCamera(cam);
+
+		//if (glm::distance(chunkPos, chunks[sorted.rbegin()->second].position) > SQRT_MAX_CHUNKS / 2 * ROOT_TWO) {
+			unloadChunk(sorted.rbegin()->second);
+		//}
+
+
+	}
+
+	std::unique_lock<std::mutex> lock(mutex);
 	for (int i = 0; i < chunks.size(); i++) {
 		if (isChunkLoaded(i)) {
 			if (!chunks[i].meshesBoundToVAO) {
@@ -28,6 +60,7 @@ void World::render(Camera & cam)
 			}
 
 			chunks[i].renderTerrain(cam);
+			//think the problem is unloading chunks while rendering, so fix that
 		}
 	}
 
@@ -40,7 +73,6 @@ void World::render(Camera & cam)
 			chunks[it->second].renderWater(cam);
 		}
 	}
-	mutex.unlock();
 
 }
 
@@ -68,17 +100,7 @@ void World::updateChunks(Camera * cam)
 
 		glm::vec3 chunkPos(c_x, 0, c_z);
 
-		if (chunks.size() > MAX_CHUNKS) {
-			//remove furthest chunk
-			std::map<float, int> sorted = sortChunksByDistanceToCamera(*cam);
-
-			if (glm::distance(chunkPos, chunks[sorted.rbegin()->second].position) > SQRT_MAX_CHUNKS / 2 * ROOT_TWO) {
-				unloadChunk(sorted.rbegin()->second);
-			}
-
-
-		}
-		else {
+		if(chunks.size() <= MAX_CHUNKS) {
 
 			int x, y, dx, dy;
 			x = y = dx = 0;

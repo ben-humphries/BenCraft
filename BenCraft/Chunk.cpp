@@ -138,7 +138,8 @@ void Chunk::renderTerrain(Camera & cam)
 	glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;// model;
 	textureShader.setMat4("transform", trans);
 
-	glDrawArrays(GL_TRIANGLES, 0, terrainMeshFaces); // mesh.size() * 3 / 5 (to get rid of texCoords) then / 3 for numTriangles
+	//if(loaded)
+		//glDrawArrays(GL_TRIANGLES, 0, terrainMeshFaces); // mesh.size() * 3 / 5 (to get rid of texCoords) then / 3 for numTriangles
 }
 void Chunk::renderWater(Camera & cam)
 {
@@ -150,7 +151,8 @@ void Chunk::renderWater(Camera & cam)
 	glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;// model;
 	waterShader.setMat4("transform", trans);
 
-	glDrawArrays(GL_TRIANGLES, 0, waterMeshFaces);
+	//if(loaded)
+		//glDrawArrays(GL_TRIANGLES, 0, waterMeshFaces);
 }
 
 void Chunk::setPosition(glm::vec3 position)
