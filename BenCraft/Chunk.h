@@ -14,6 +14,8 @@ public:
 	Chunk();
 	~Chunk();
 
+	bool loaded = false;
+
 	Block blocks[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE];
 
 	void initializeBlocks();
@@ -26,7 +28,6 @@ public:
 	void bindMeshesToVAO();
 	bool meshesBoundToVAO = false;
 
-	bool loaded = false;
 
 	void cleanup();
 

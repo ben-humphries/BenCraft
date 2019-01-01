@@ -8,7 +8,7 @@
 #include <mutex>
 
 
-const int MAX_CHUNKS = 64;
+const int MAX_CHUNKS = 128;
 const int SQRT_MAX_CHUNKS = glm::sqrt(MAX_CHUNKS);
 
 class World
@@ -42,5 +42,9 @@ private:
 
 	std::thread update_chunks_thread;
 	std::mutex mutex;
+
+	//change to CHunk *
+	//or maybe store chunks in a dictionary so that the loaded boolean is always certainly initialized. then isLoaded() check should work
+	std::vector<int> toRender;
 };
 
