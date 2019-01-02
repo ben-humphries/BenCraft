@@ -164,12 +164,12 @@ void Chunk::bindMeshesToVAO()
 {
 
 	if (!textureShaderInitialized) {
-		textureShader = Shader("vertex.glsl", "fragment.glsl");
+		textureShader = Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 		textureShaderInitialized = true;
 	}
 
 	if (!waterShaderInitialized) {
-		waterShader = Shader("vertex.glsl", "water_fragment.glsl");
+		waterShader = Shader("shaders/vertex.glsl", "shaders/water_fragment.glsl");
 		waterShaderInitialized = true;
 	}
 

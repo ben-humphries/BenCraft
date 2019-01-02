@@ -8,12 +8,12 @@
 class Skybox {
 
 	std::string faces[6] = {
-		"skybox/right.tga",
-		"skybox/left.tga",
-		"skybox/top.tga",
-		"skybox/bottom.tga",
-		"skybox/back.tga",
-		"skybox/front.tga"
+		"res/skybox/right.tga",
+		"res/skybox/left.tga",
+		"res/skybox/top.tga",
+		"res/skybox/bottom.tga",
+		"res/skybox/back.tga",
+		"res/skybox/front.tga"
 	};
 
 	const float vertices[108] = {
@@ -108,7 +108,7 @@ public:
 		glEnableVertexAttribArray(0);
 
 		//Initialize shader
-		shader = Shader("skybox_vertex.glsl", "skybox_fragment.glsl");
+		shader = Shader("shaders/skybox_vertex.glsl", "shaders/skybox_fragment.glsl");
 
 	}
 	void bindCubeMapTexture() {

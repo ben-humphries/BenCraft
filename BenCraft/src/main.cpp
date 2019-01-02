@@ -58,7 +58,7 @@ int main()
 	TextureAtlas textureAtlas;
 
 	//texture loading
-	textureAtlas.load("textureAtlas.png");
+	textureAtlas.load("res/textures/TextureAtlas.png");
 	skybox.bindCubeMapTexture();
 
 
