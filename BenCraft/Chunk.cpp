@@ -183,8 +183,8 @@ void Chunk::bindMeshesToVAO()
 	if (waterVAO == 0)
 		glGenVertexArrays(1, &waterVAO);
 
-	addMeshToVAO(terrainVAO, terrainVBO, terrainMesh);
-	addMeshToVAO(waterVAO, terrainVBO, waterMesh);
+	addMeshToVAO(&terrainVAO, &terrainVBO, terrainMesh);
+	addMeshToVAO(&waterVAO, &waterVBO, waterMesh);
 
 	meshesBoundToVAO = true;
 }
@@ -262,18 +262,15 @@ void Chunk::addToMesh(std::vector<float> & mesh, const float vertices[18], float
 	}
 }
 
-void Chunk::addMeshToVAO(unsigned int vao, unsigned int vbo, std::vector<float> mesh)
+void Chunk::addMeshToVAO(unsigned int * vao, unsigned int * vbo, std::vector<float> mesh)
 {
 
-	if (vao == 0)
-		glGenVertexArrays(1, &vao);
-
-	glBindVertexArray(vao);
+	glBindVertexArray(*vao);
 
 	//initialize vertex buffer object
-	glGenBuffers(1, &vbo);
+	glGenBuffers(1, vbo);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, *vbo);
 
 	//copy vertices data to vbo
 	if (mesh.size() > 0)

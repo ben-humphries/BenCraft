@@ -220,8 +220,10 @@ void World::unloadChunk(glm::vec3 position)
 void World::unloadChunk(int index)
 {
 	if (isChunkLoaded(index)) {
+		mutex.lock();
 		chunks[index].cleanup();
 		chunks.erase(chunks.begin() + index);
+		mutex.unlock();
 	}
 
 }

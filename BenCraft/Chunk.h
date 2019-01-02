@@ -46,7 +46,7 @@ private:
 
 	void addToMesh(std::vector<float> & mesh, const float vertices[18], float xOffset, float yOffset, float zOffset, int textureOffset);
 
-	void addMeshToVAO(unsigned int vao, unsigned int vbo, std::vector<float> mesh);
+	void addMeshToVAO(unsigned int * vao, unsigned int * vbo, std::vector<float> mesh);
 
 	unsigned int terrainVAO;
 	unsigned int waterVAO;
