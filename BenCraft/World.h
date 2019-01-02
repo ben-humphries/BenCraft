@@ -23,18 +23,21 @@ public:
 	bool running = true;
 
 private:
-	long worldSizeBlocks;
 
 	void updateChunks(Camera * cam);
+
 	void startUpdatingChunks(Camera * cam);
 
 	int getHeightAtXZ(glm::vec2 position);
 
 	int getChunkAt(glm::vec3 position);
+	glm::vec3 getChunkPosAt(glm::vec3 position);
 
 	void loadChunk(glm::vec3 position);
+
 	bool isChunkLoaded(glm::vec3 position);
 	bool isChunkLoaded(int index);
+
 	void unloadChunk(glm::vec3 position);
 	void unloadChunk(int index);
 
@@ -42,9 +45,5 @@ private:
 
 	std::thread update_chunks_thread;
 	std::mutex mutex;
-
-	//change to CHunk *
-	//or maybe store chunks in a dictionary so that the loaded boolean is always certainly initialized. then isLoaded() check should work
-	std::vector<int> toRender;
 };
 

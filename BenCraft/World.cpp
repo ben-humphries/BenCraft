@@ -21,47 +21,26 @@ World::~World()
 
 void World::render(Camera & cam)
 {
+	glm::vec3 chunkPos = getChunkPosAt(cam.getPosition());
 
-	glm::vec3 cameraPos = cam.getPosition();
-	int c_x;
-	int c_z;
-
-	if (cameraPos.x < 0) {
-		c_x = (cameraPos.x - CHUNK_SIZE) / CHUNK_SIZE;
-	}
-	else {
-		c_x = cameraPos.x / CHUNK_SIZE;
-	}
-
-	if (cameraPos.z < 0) {
-		c_z = (cameraPos.z - CHUNK_SIZE) / CHUNK_SIZE;
-	}
-	else {
-		c_z = cameraPos.z / CHUNK_SIZE;
-	}
-
-	glm::vec3 chunkPos(c_x, 0, c_z);
-
+	//Unload chunks if we have exceeded the maximum number of chunks to be rendered
 	while (chunks.size() > MAX_CHUNKS) {
 		//remove furthest chunk
 		std::map<float, int> sorted = sortChunksByDistanceToCamera(cam);
 
-		//if (glm::distance(chunkPos, chunks[sorted.rbegin()->second].position) > SQRT_MAX_CHUNKS / 2 * ROOT_TWO) {
-			unloadChunk(sorted.rbegin()->second);
-		//}
-
-
+		unloadChunk(sorted.rbegin()->second);
 	}
 
 	mutex.lock();
+	//Render terrain first
 	for (int i = 0; i < chunks.size(); i++) {
 		if (isChunkLoaded(i)) {
+
 			if (!chunks[i].meshesBoundToVAO) {
 				chunks[i].bindMeshesToVAO();
 			}
 
 			chunks[i].renderTerrain(cam);
-			//think the problem is unloading chunks while rendering, so fix that
 		}
 	}
 
@@ -74,35 +53,18 @@ void World::render(Camera & cam)
 			chunks[it->second].renderWater(cam);
 		}
 	}
+
 	mutex.unlock();
 }
 
 void World::updateChunks(Camera * cam)
 {
 	while (running) {
-		glm::vec3 cameraPos = cam->getPosition();
-
-		int c_x;
-		int c_z;
-
-		if (cameraPos.x < 0) {
-			c_x = (cameraPos.x - CHUNK_SIZE) / CHUNK_SIZE;
-		}
-		else {
-			c_x = cameraPos.x / CHUNK_SIZE;
-		}
-
-		if (cameraPos.z < 0) {
-			c_z = (cameraPos.z - CHUNK_SIZE) / CHUNK_SIZE;
-		}
-		else {
-			c_z = cameraPos.z / CHUNK_SIZE;
-		}
-
-		glm::vec3 chunkPos(c_x, 0, c_z);
+		glm::vec3 chunkPos = getChunkPosAt(cam->getPosition());
 
 		if(chunks.size() <= MAX_CHUNKS) {
 
+			//This for loop allows chunks to be loaded radially around the player.
 			int x, y, dx, dy;
 			x = y = dx = 0;
 			dy = -1;
@@ -162,6 +124,28 @@ int World::getChunkAt(glm::vec3 position)
 	return -1;
 }
 
+glm::vec3 World::getChunkPosAt(glm::vec3 position)
+{
+	int c_x;
+	int c_z;
+
+	if (position.x < 0) {
+		c_x = (position.x - CHUNK_SIZE) / CHUNK_SIZE;
+	}
+	else {
+		c_x = position.x / CHUNK_SIZE;
+	}
+
+	if (position.z < 0) {
+		c_z = (position.z - CHUNK_SIZE) / CHUNK_SIZE;
+	}
+	else {
+		c_z = position.z / CHUNK_SIZE;
+	}
+
+	return glm::vec3(c_x, 0, c_z);
+}
+
 void World::loadChunk(glm::vec3 position)
 {
 	int x_start = position.x * CHUNK_SIZE;
@@ -172,6 +156,11 @@ void World::loadChunk(glm::vec3 position)
 	mutex.unlock();
 	c.setPosition(position);
 
+	//This is the time consuming part of loading a chunk, so we do not want to lock the mutex here.
+	//The loaded boolean in Chunk will allow us to check in render if we are finished, so calling render
+	//in the middle of loading isn't an issue. But to check that, we must lock the mutex around the initialization
+	//of all chunk objects, and ensure it is locked when added to our list of chunks. Otherwise the loaded variable
+	//may not be initialized or able to be referenced, and the render function will fail.
 	for (int x = x_start; x < x_start + CHUNK_SIZE; x++) {
 		for (int z = z_start; z < z_start + CHUNK_SIZE; z++) {
 			int h = getHeightAtXZ(glm::vec2(x, z));
@@ -198,6 +187,8 @@ void World::loadChunk(glm::vec3 position)
 	}
 
 	c.generateMesh();
+
+
 	mutex.lock();
 	c.loaded = true;
 	chunks.push_back(c);
