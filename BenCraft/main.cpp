@@ -16,6 +16,10 @@
 #include "TextureAtlas.h"
 #include "Skybox.h"
 
+#define _CRTDBG_MAP_ALLOC  
+#include <stdlib.h>  
+#include <crtdbg.h>  
+
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -123,7 +127,8 @@ int main()
 
 		window.display();
 	}
-
+	world.running = false;
+	_CrtDumpMemoryLeaks();
 	window.setActive(false);
 
 	return 0;

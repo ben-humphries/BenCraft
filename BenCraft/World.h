@@ -8,7 +8,7 @@
 #include <mutex>
 
 
-const int MAX_CHUNKS = 128;
+const int MAX_CHUNKS = 144;
 const int SQRT_MAX_CHUNKS = glm::sqrt(MAX_CHUNKS);
 
 class World
@@ -20,7 +20,7 @@ public:
 	std::vector<Chunk> chunks;
 
 	void render(Camera & cam);
-
+	bool running = true;
 
 private:
 	long worldSizeBlocks;

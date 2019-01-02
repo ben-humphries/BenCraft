@@ -16,6 +16,7 @@ World::World(Camera * cam)
 
 World::~World()
 {
+	running = false;
 }
 
 void World::render(Camera & cam)
@@ -52,7 +53,7 @@ void World::render(Camera & cam)
 
 	}
 
-	std::unique_lock<std::mutex> lock(mutex);
+	mutex.lock();
 	for (int i = 0; i < chunks.size(); i++) {
 		if (isChunkLoaded(i)) {
 			if (!chunks[i].meshesBoundToVAO) {
@@ -73,12 +74,12 @@ void World::render(Camera & cam)
 			chunks[it->second].renderWater(cam);
 		}
 	}
-
+	mutex.unlock();
 }
 
 void World::updateChunks(Camera * cam)
 {
-	while (true) {
+	while (running) {
 		glm::vec3 cameraPos = cam->getPosition();
 
 		int c_x;
@@ -148,6 +149,7 @@ int World::getHeightAtXZ(glm::vec2 position)
 
 int World::getChunkAt(glm::vec3 position)
 {
+
 	for (int i = 0; i < chunks.size(); i++) {
 		if (!isChunkLoaded(i))
 			continue;
@@ -165,7 +167,9 @@ void World::loadChunk(glm::vec3 position)
 	int x_start = position.x * CHUNK_SIZE;
 	int z_start = position.z * CHUNK_SIZE;
 
+	mutex.lock();
 	Chunk c;
+	mutex.unlock();
 	c.setPosition(position);
 
 	for (int x = x_start; x < x_start + CHUNK_SIZE; x++) {
@@ -194,8 +198,10 @@ void World::loadChunk(glm::vec3 position)
 	}
 
 	c.generateMesh();
+	mutex.lock();
 	c.loaded = true;
 	chunks.push_back(c);
+	mutex.unlock();
 }
 
 bool World::isChunkLoaded(glm::vec3 position)
