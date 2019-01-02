@@ -17,6 +17,7 @@ World::World(Camera * cam)
 World::~World()
 {
 	running = false;
+	update_chunks_thread.join();
 }
 
 void World::render(Camera & cam)
