@@ -20,7 +20,7 @@ World::~World()
 	update_chunks_thread.join();
 }
 
-void World::render(Camera & cam)
+void World::render(Camera & cam, float elapsedTime)
 {
 	glm::vec3 chunkPos = getChunkPosAt(cam.getPosition());
 
@@ -51,7 +51,7 @@ void World::render(Camera & cam)
 	for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
 	{
 		if (isChunkLoaded(it->second)) {
-			chunks[it->second].renderWater(cam);
+			chunks[it->second].renderWater(cam, elapsedTime);
 		}
 	}
 

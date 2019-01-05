@@ -137,7 +137,7 @@ void Chunk::renderTerrain(Camera & cam)
 	if(loaded)
 		glDrawArrays(GL_TRIANGLES, 0, terrainMeshFaces);
 }
-void Chunk::renderWater(Camera & cam)
+void Chunk::renderWater(Camera & cam, float elapsedTime)
 {
 
 	glBindVertexArray(waterVAO);
@@ -146,6 +146,7 @@ void Chunk::renderWater(Camera & cam)
 
 	glm::mat4 trans = cam.getProjectionMatrix() * cam.getViewMatrix() * model;
 	waterShader.setMat4("transform", trans);
+	waterShader.setFloat("t", elapsedTime);
 
 	if(loaded)
 		glDrawArrays(GL_TRIANGLES, 0, waterMeshFaces);
@@ -169,7 +170,7 @@ void Chunk::bindMeshesToVAO()
 	}
 
 	if (!waterShaderInitialized) {
-		waterShader = Shader("shaders/vertex.glsl", "shaders/water_fragment.glsl");
+		waterShader = Shader("shaders/water_vertex.glsl", "shaders/water_fragment.glsl");
 		waterShaderInitialized = true;
 	}
 

@@ -19,7 +19,7 @@ public:
 
 	std::vector<Chunk> chunks;
 
-	void render(Camera & cam);
+	void render(Camera & cam, float elapsedTime);
 	bool running = true;
 
 private:

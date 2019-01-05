@@ -25,6 +25,7 @@ void processInput(sf::Window &window, float dt);
 Camera * camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 bool gameFocused = true;
+float elapsedTime = 0.0f;
 
 int main()
 {
@@ -108,6 +109,7 @@ int main()
 		}
 
 		float dt = clock.getElapsedTime().asSeconds();
+		elapsedTime += dt;
 		clock.restart();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -119,7 +121,7 @@ int main()
 		skybox.bindCubeMapTexture();
 		skybox.render(*camera);
 		textureAtlas.bind();
-		world.render(*camera);
+		world.render(*camera, elapsedTime);
 
 
 		window.display();

@@ -22,7 +22,7 @@ public:
 	//void addBlock(BlockType type, )
 	void generateMesh();
 	void renderTerrain(Camera &cam);
-	void renderWater(Camera &cam);
+	void renderWater(Camera &cam, float elapsedTime);
 	void setPosition(glm::vec3 position);
 
 	void bindMeshesToVAO();
