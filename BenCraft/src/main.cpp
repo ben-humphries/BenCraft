@@ -16,15 +16,11 @@
 #include "TextureAtlas.h"
 #include "Skybox.h"
 
-#define _CRTDBG_MAP_ALLOC  
-#include <stdlib.h>  
-#include <crtdbg.h>  
-
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-void processInput(sf::Window &window);
+void processInput(sf::Window &window, float dt);
 
 Camera * camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -111,13 +107,14 @@ int main()
 			}
 		}
 
+		float dt = clock.getElapsedTime().asSeconds();
+		clock.restart();
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if (gameFocused) {
-			processInput(window);
+			processInput(window, dt);
 		}
-
-		clock.restart();
 
 		skybox.bindCubeMapTexture();
 		skybox.render(*camera);
@@ -128,32 +125,31 @@ int main()
 		window.display();
 	}
 	world.running = false;
-	_CrtDumpMemoryLeaks();
 	window.setActive(false);
 
 	return 0;
 }
 
 
-void processInput(sf::Window &window) {
+void processInput(sf::Window &window, float dt) {
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		camera->fpKeyboardMove(FORWARD);
+		camera->fpKeyboardMove(FORWARD, dt);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		camera->fpKeyboardMove(LEFT);
+		camera->fpKeyboardMove(LEFT, dt);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		camera->fpKeyboardMove(BACKWARD);
+		camera->fpKeyboardMove(BACKWARD, dt);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		camera->fpKeyboardMove(RIGHT);
+		camera->fpKeyboardMove(RIGHT, dt);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		camera->fpKeyboardMove(UP);
+		camera->fpKeyboardMove(UP, dt);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-		camera->fpKeyboardMove(DOWN);
+		camera->fpKeyboardMove(DOWN, dt);
 	}
 
 	//to fix beginning offset, set mouse position to centerScreen on init

@@ -20,7 +20,7 @@ enum MoveCamera {
 
 
 const float MOUSE_SENSITIVITY = 0.1f;
-const float MOVEMENT_SPEED = 0.3f;
+const float MOVEMENT_SPEED = 25.0f;
 
 
 class Camera
@@ -36,7 +36,7 @@ public:
 
 	void move(glm::vec3 tomove);
 
-	void fpKeyboardMove(MoveCamera direction);
+	void fpKeyboardMove(MoveCamera direction, float dt);
 	void fpMouseMove(float dx, float dy, bool constrainPitch = true);
 
 	glm::vec3 getPosition();

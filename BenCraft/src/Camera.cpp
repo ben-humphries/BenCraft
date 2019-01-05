@@ -32,9 +32,9 @@ void Camera::move(glm::vec3 tomove)
 	updateCameraAttributes();
 }
 
-void Camera::fpKeyboardMove(MoveCamera direction)
+void Camera::fpKeyboardMove(MoveCamera direction, float dt)
 {
-	float speed = MOVEMENT_SPEED;
+	float speed = MOVEMENT_SPEED * dt;
 
 	if (direction == RIGHT) {
 		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
