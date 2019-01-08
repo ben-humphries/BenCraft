@@ -20,6 +20,7 @@ public:
 	std::vector<Chunk> chunks;
 
 	void render(Camera & cam, float elapsedTime);
+	Block * getBlockAt(int x, int y, int z);
 	bool running = true;
 
 private:

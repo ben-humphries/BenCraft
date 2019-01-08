@@ -58,6 +58,15 @@ void World::render(Camera & cam, float elapsedTime)
 	mutex.unlock();
 }
 
+Block * World::getBlockAt(int x, int y, int z)
+{
+	glm::vec3 chunkPosition = glm::vec3(x / CHUNK_SIZE, 0, z / CHUNK_SIZE);
+
+	int index = getChunkAt(chunkPosition);
+
+	return &chunks[index].blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE];
+}
+
 void World::updateChunks(Camera * cam)
 {
 	while (running) {
@@ -227,6 +236,7 @@ void World::unloadChunk(int index)
 	}
 
 }
+
 std::map<float, int> World::sortChunksByDistanceToCamera(Camera & cam)
 {
 	std::map<float, int> sorted;
