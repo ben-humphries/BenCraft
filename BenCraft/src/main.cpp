@@ -123,7 +123,6 @@ int main()
 		textureAtlas.bind();
 		world.render(*camera, elapsedTime);
 
-
 		window.display();
 	}
 	world.running = false;

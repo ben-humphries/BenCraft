@@ -64,6 +64,9 @@ Block * World::getBlockAt(int x, int y, int z)
 
 	int index = getChunkAt(chunkPosition);
 
+	if (!isChunkLoaded(index)) {
+		return NULL;
+	}
 	return &chunks[index].blocks[x % CHUNK_SIZE][y][z % CHUNK_SIZE];
 }
 
