@@ -15,6 +15,7 @@
 #include "World.h"
 #include "TextureAtlas.h"
 #include "Skybox.h"
+#include "BoundingBox.h"
 
 
 #define WINDOW_WIDTH 800
@@ -122,6 +123,8 @@ int main()
 		skybox.render(*camera);
 		textureAtlas.bind();
 		world.render(*camera, elapsedTime);
+
+		printf("%f\n", camera->getPosition().y);
 
 		window.display();
 	}

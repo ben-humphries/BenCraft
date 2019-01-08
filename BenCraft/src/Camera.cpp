@@ -8,6 +8,10 @@ Camera::Camera(float windowWidth, float windowHeight)
 	projection = glm::perspective(glm::radians(45.0f), windowWidth / windowHeight, 0.1f, 300.0f);
 
 	updateCameraAttributes();
+
+	box.dimensions.x = 0;
+	box.dimensions.y = 2;
+	box.dimensions.z = 0;
 }
 
 glm::mat4 Camera::getViewMatrix()
@@ -36,26 +40,34 @@ void Camera::fpKeyboardMove(MoveCamera direction, float dt)
 {
 	float speed = MOVEMENT_SPEED * dt;
 
+	glm::vec3 velocity = glm::vec3(0);
+
 	if (direction == RIGHT) {
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+		velocity += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
 	}
 	else if (direction == LEFT) {
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+		velocity -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
 	}
 
 	if (direction == UP) {
-		cameraPos += glm::vec3(0, 1, 0) * speed;
+		velocity += glm::vec3(0, 1, 0) * speed;
 	}
 	else if (direction == DOWN) {
-		cameraPos -= glm::vec3(0, 1, 0) * speed;
+		velocity -= glm::vec3(0, 1, 0) * speed;
 	}
 
 	if (direction == FORWARD) {
-		cameraPos += cameraFront * speed;
+		velocity += cameraFront * speed;
 	}
 	else if (direction == BACKWARD) {
-		cameraPos -= cameraFront * speed;
+		velocity -= cameraFront * speed;
 	}
+
+	if (getPosition().y + velocity.y + box.dimensions.y < 15.0) {
+		velocity.y = 15.0 - (cameraPos.y + box.dimensions.y);
+	}
+
+	cameraPos += velocity;
 
 	updateCameraAttributes();
 

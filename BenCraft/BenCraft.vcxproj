@@ -77,7 +77,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\Util;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\World;C:\Users\Ben Humphries\glm-0.9.9.3\glm;C:\Users\Ben Humphries\glew-2.1.0\include;C:\Users\Ben Humphries\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\Physics;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\Util;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\World;C:\Users\Ben Humphries\glm-0.9.9.3\glm;C:\Users\Ben Humphries\glew-2.1.0\include;C:\Users\Ben Humphries\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -91,7 +91,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\Util;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\World;C:\Users\Ben Humphries\glm-0.9.9.3\glm;C:\Users\Ben Humphries\glew-2.1.0\include;C:\Users\Ben Humphries\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\Physics;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\Util;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\World;C:\Users\Ben Humphries\glm-0.9.9.3\glm;C:\Users\Ben Humphries\glew-2.1.0\include;C:\Users\Ben Humphries\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -107,7 +107,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\Util;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\World;C:\Users\Ben Humphries\glm-0.9.9.3\glm;C:\Users\Ben Humphries\glew-2.1.0\include;C:\Users\Ben Humphries\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\Physics;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\Util;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\World;C:\Users\Ben Humphries\glm-0.9.9.3\glm;C:\Users\Ben Humphries\glew-2.1.0\include;C:\Users\Ben Humphries\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -125,7 +125,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\Util;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\World;C:\Users\Ben Humphries\glm-0.9.9.3\glm;C:\Users\Ben Humphries\glew-2.1.0\include;C:\Users\Ben Humphries\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\Physics;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\Util;C:\Users\Ben Humphries\Documents\Programming\c++\BenCraft\BenCraft\src\World;C:\Users\Ben Humphries\glm-0.9.9.3\glm;C:\Users\Ben Humphries\glew-2.1.0\include;C:\Users\Ben Humphries\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -143,6 +143,7 @@
     <ClCompile Include="src\World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Physics\BoundingBox.h" />
     <ClInclude Include="src\World\Block.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\World\Chunk.h" />

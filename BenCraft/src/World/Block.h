@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BoundingBox.h"
 typedef enum {
 	BLOCKTYPE_AIR,
 	BLOCKTYPE_GRASS,
@@ -33,6 +34,7 @@ public:
 
 	void setType(BlockType type);
 
+	BoundingBox box;
 private:
 	void setAllFaces(int textureOffset);
 };

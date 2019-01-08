@@ -9,6 +9,8 @@ Block::Block()
 Block::Block(BlockType type)
 {
 	setType(type);
+
+	box.dimensions = glm::vec3(1);
 }
 
 
