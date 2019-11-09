@@ -13,6 +13,7 @@
 
 #include "Camera.h"
 #include "Skybox.h"
+#include "Chunk.h"
 
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 900
@@ -70,6 +71,19 @@ int main()
 	bool wireframe = false;
 	sf::Clock clock;
 
+	//TEMP VARIABLES
+	Chunk testChunk = Chunk();
+
+	for (int x = 0; x < 16; x++) {
+		for (int y = 0; y < 16; y++) {
+			for (int z = 0; z < 16; z++) {
+				if (x > 6 && z > 14)
+					testChunk.set(x, y, z, 50);
+				else
+					testChunk.set(x, y, z, (uint8_t) 100);
+			}
+		}
+	}
 
 	while (running)
 	{
@@ -118,6 +132,8 @@ int main()
 
 		skybox.bindCubeMapTexture();
 		skybox.render(camera);
+
+		testChunk.render(camera);
 
 		window.display();
 	}
