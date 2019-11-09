@@ -8,10 +8,6 @@ Camera::Camera(float windowWidth, float windowHeight)
 	projection = glm::perspective(glm::radians(45.0f), windowWidth / windowHeight, 0.1f, 300.0f);
 
 	updateCameraAttributes();
-
-	box.dimensions.x = 0;
-	box.dimensions.y = 2;
-	box.dimensions.z = 0;
 }
 
 glm::mat4 Camera::getViewMatrix()
@@ -61,10 +57,6 @@ void Camera::fpKeyboardMove(MoveCamera direction, float dt)
 	}
 	else if (direction == BACKWARD) {
 		velocity -= cameraFront * speed;
-	}
-
-	if (getPosition().y + velocity.y + box.dimensions.y < 15.0) {
-		velocity.y = 15.0 - (cameraPos.y + box.dimensions.y);
 	}
 
 	cameraPos += velocity;

@@ -12,10 +12,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "Camera.h"
-#include "World.h"
 #include "TextureAtlas.h"
 #include "Skybox.h"
-#include "BoundingBox.h"
 
 
 #define WINDOW_WIDTH 800
@@ -51,7 +49,6 @@ int main()
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	World world(camera);
 	Skybox skybox;
 	TextureAtlas textureAtlas;
 
@@ -122,13 +119,9 @@ int main()
 		skybox.bindCubeMapTexture();
 		skybox.render(*camera);
 		textureAtlas.bind();
-		world.render(*camera, elapsedTime);
-
-		printf("%f\n", camera->getPosition().y);
 
 		window.display();
 	}
-	world.running = false;
 	window.setActive(false);
 
 	return 0;

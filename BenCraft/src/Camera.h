@@ -9,8 +9,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "BoundingBox.h"
-
 enum MoveCamera {
 	FORWARD,
 	BACKWARD,
@@ -42,8 +40,6 @@ public:
 	void fpMouseMove(float dx, float dy, bool constrainPitch = true);
 
 	glm::vec3 getPosition();
-
-	BoundingBox box;
 
 private:
 
