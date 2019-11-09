@@ -12,31 +12,26 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "Camera.h"
-#include "TextureAtlas.h"
 #include "Skybox.h"
 
-
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 1200
+#define WINDOW_HEIGHT 900
 
 void processInput(sf::Window &window, float dt);
 
-Camera * camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
-
-bool gameFocused = true;
-float elapsedTime = 0.0f;
+//Global variables
+sf::ContextSettings settings;
+//window is declared in main once the context settings are initialized.
+Camera * camera;
 
 int main()
 {
 	//set version of OpenGL
-	sf::ContextSettings settings;
 	settings.depthBits = 24;
 	settings.majorVersion = 3;
 	settings.minorVersion = 3;
 
 	sf::Window window;
-
-
 	window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "BenCraft", sf::Style::Default, settings);
 	window.setVerticalSyncEnabled(true);
 	window.setMouseCursorVisible(false);
@@ -50,10 +45,8 @@ int main()
 	glewInit();
 
 	Skybox skybox;
-	TextureAtlas textureAtlas;
 
-	//texture loading
-	textureAtlas.load("res/textures/TextureAtlas.png");
+	//Texture loading
 	skybox.bindCubeMapTexture();
 
 
@@ -68,9 +61,16 @@ int main()
 
 	glClearColor(0.0f, 0.3f, 0.8f, 1.0f);
 
+	camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+	//Util variables
+	bool gameFocused = true;
+	float elapsedTime = 0.0f;
 	bool running = true;
 	bool wireframe = false;
 	sf::Clock clock;
+
+
 	while (running)
 	{
 		sf::Event event;
@@ -117,8 +117,7 @@ int main()
 		}
 
 		skybox.bindCubeMapTexture();
-		skybox.render(*camera);
-		textureAtlas.bind();
+		skybox.render(camera);
 
 		window.display();
 	}

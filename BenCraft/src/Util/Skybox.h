@@ -94,7 +94,6 @@ public:
 		glBindVertexArray(vao);
 
 		//initialize vertex buffer object
-		unsigned int vbo;
 		glGenBuffers(1, &vbo);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -114,17 +113,17 @@ public:
 	void bindCubeMapTexture() {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 	}
-	void render(Camera & cam) {
+	void render(Camera * cam) {
 
 		glDepthMask(GL_FALSE);
 
 		glBindVertexArray(vao);
 
-		glm::mat4 view = glm::mat4(glm::mat3(cam.getViewMatrix()));
+		glm::mat4 view = glm::mat4(glm::mat3(cam->getViewMatrix()));
 
 		shader.use();
 
-		shader.setMat4("projection", cam.getProjectionMatrix());
+		shader.setMat4("projection", cam->getProjectionMatrix());
 		shader.setMat4("view", view);
 
 
@@ -138,6 +137,7 @@ private:
 
 	unsigned int texture;
 	unsigned int vao;
+	unsigned int vbo;
 
 	Shader shader;
 };
