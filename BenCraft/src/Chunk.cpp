@@ -2,7 +2,7 @@
 
 Chunk::Chunk()
 {
-	memset(blocks, 0, sizeof(blocks));
+	blocks = new blocktype[CHUNK_X * CHUNK_Y * CHUNK_Z];
 
 	glGenVertexArrays(1, &vao);
 	
@@ -18,6 +18,8 @@ Chunk::Chunk()
 
 Chunk::~Chunk()
 {
+	delete[] blocks;
+
 	glBindVertexArray(vao);
 	glDeleteBuffers(1, &vbo);
 
@@ -27,12 +29,12 @@ Chunk::~Chunk()
 
 blocktype Chunk::get(int x, int y, int z)
 {
-	return blocks[x][y][z];
+	return blocks[x + CHUNK_X * (y + CHUNK_Z * z)];
 }
 
 void Chunk::set(int x, int y, int z, blocktype type)
 {
-	blocks[x][y][z] = type;
+	blocks[x + CHUNK_X * (y + CHUNK_Z * z)] = type;
 	changed = true;
 }
 
@@ -41,14 +43,14 @@ void Chunk::update()
 	changed = false;
 
 	//create the mesh
-	byte4 vertices[CHUNK_X * CHUNK_Y * CHUNK_Z * 6 * 6]; //6 faces and 6 vertices per face (2 triangles)
+	byte4 * vertices = new byte4[CHUNK_X * CHUNK_Y * CHUNK_Z * 6 * 6]; //6 faces and 6 vertices per face (2 triangles)
 
 	int i = 0;
 	for (int x = 0; x < CHUNK_X; x++) {
 		for (int y = 0; y < CHUNK_Y; y++) {
 			for (int z = 0; z < CHUNK_Z; z++) {
 				
-				blocktype type = blocks[x][y][z];
+				blocktype type = get(x, y, z);
 
 				if (type == 0)
 					continue;
@@ -119,6 +121,8 @@ void Chunk::update()
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+
+	delete[] vertices;
 }
 
 void Chunk::render(Camera * camera)
