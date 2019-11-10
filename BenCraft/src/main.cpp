@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "Skybox.h"
 #include "Chunk.h"
+#include "TextureAtlas.h"
 
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 900
@@ -73,17 +74,24 @@ int main()
 
 	//TEMP VARIABLES
 	Chunk testChunk = Chunk();
-
+	TextureAtlas textureAtlas; //move this to a world/terrain class eventually?
+	///////////
+	//TEMP INITIALIZATIONS
 	for (int x = 0; x < 16; x++) {
 		for (int y = 0; y < 16; y++) {
 			for (int z = 0; z < 16; z++) {
 				if (x > 6 && z > 14)
-					testChunk.set(x, y, z, 50);
+					testChunk.set(x, y, z, 0);
 				else
-					testChunk.set(x, y, z, (uint8_t) 100);
+					testChunk.set(x, y, z, (uint8_t) 1);
 			}
 		}
 	}
+	textureAtlas.load("res/textures/TextureAtlas.png");
+	///////////
+
+	skybox.bindCubeMapTexture();
+	textureAtlas.bind();
 
 	while (running)
 	{
@@ -130,9 +138,7 @@ int main()
 			processInput(window, dt);
 		}
 
-		skybox.bindCubeMapTexture();
 		skybox.render(camera);
-
 		testChunk.render(camera);
 
 		window.display();
