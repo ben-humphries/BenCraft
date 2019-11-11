@@ -5,13 +5,16 @@
 #include "Shader.h"
 #include "Camera.h"
 
-#define CHUNK_X 16
-#define CHUNK_Y 16
-#define CHUNK_Z 16
+#define CHUNK_X 64
+#define CHUNK_Y 64
+#define CHUNK_Z 64
+
+#define TEXTURE_ATLAS_SIZE 10
 
 typedef uint8_t blocktype;
-typedef glm::tvec4<uint8_t> byte4; //This limits the maximum chunk size in any direction to 256, as only integers -128..127 can be represented with 8 bits
+typedef glm::tvec3<uint8_t> byte3; //This limits the maximum chunk size in any direction to 256, as only integers -128..127 can be represented with 8 bits
 								   //This also may only actually be 128 if the hardware/compiler doesn't support unsigned ints
+typedef glm::tvec2<float> byte2;
 
 class Chunk
 {
@@ -34,6 +37,7 @@ private:
 
 	//This vbo is specific to each mesh. So if later we add a water mesh, we will need another vbo
 	unsigned int vbo;
+	unsigned int tex_vbo;
 	int numVertices;
 	Shader shader;
 	//

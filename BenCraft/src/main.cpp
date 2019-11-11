@@ -77,13 +77,13 @@ int main()
 	TextureAtlas textureAtlas; //move this to a world/terrain class eventually?
 	///////////
 	//TEMP INITIALIZATIONS
-	for (int x = 0; x < 16; x++) {
-		for (int y = 0; y < 16; y++) {
-			for (int z = 0; z < 16; z++) {
+	for (int x = 0; x < 64; x++) {
+		for (int y = 0; y < 64; y++) {
+			for (int z = 0; z < 64; z++) {
 				if (x > 6 && z > 14)
-					testChunk.set(x, y, z, 0);
+					testChunk.set(x, y, z, 3);
 				else
-					testChunk.set(x, y, z, (uint8_t) 1);
+					testChunk.set(x, y, z, 1);
 			}
 		}
 	}
