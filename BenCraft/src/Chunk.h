@@ -5,9 +5,9 @@
 #include "Shader.h"
 #include "Camera.h"
 
-#define CHUNK_X 64
-#define CHUNK_Y 64
-#define CHUNK_Z 64
+#define CHUNK_X 16
+#define CHUNK_Y 16
+#define CHUNK_Z 16
 
 #define TEXTURE_ATLAS_SIZE 10
 
@@ -28,8 +28,12 @@ public:
 	void update();
 	void render(Camera * camera);
 
+	void setModelMatrix(glm::mat4 model_matrix);
+
 private:
 	blocktype * blocks;
+
+	glm::mat4 model_matrix;
 
 	//Class-wide
 	unsigned int vao;

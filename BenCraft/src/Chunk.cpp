@@ -4,6 +4,12 @@ Chunk::Chunk()
 {
 	blocks = new blocktype[CHUNK_X * CHUNK_Y * CHUNK_Z];
 
+	for (int i = 0; i < CHUNK_X * CHUNK_Y * CHUNK_Z; i++) {
+		blocks[i] = 0;
+	}
+
+	model_matrix = glm::mat4(1);
+
 	glGenVertexArrays(1, &vao);
 	
 	glGenBuffers(1, &vbo);
@@ -73,7 +79,7 @@ void Chunk::update()
 				int faces = 0;
 
 				//negative x
-				if (!(x > 0 && get(x - 1, y, z) != 0)) { //TODO: check for chunk edges
+				if (x == 0 || get(x - 1, y, z) == 0) { //TODO: check for chunk edges
 					vertices[i++] = byte3(x, y + 1, z);
 					vertices[i++] = byte3(x, y, z);
 					vertices[i++] = byte3(x, y + 1, z + 1);
@@ -85,7 +91,7 @@ void Chunk::update()
 				}
 
 				//positive x
-				if (!(x < CHUNK_X - 1 && get(x + 1, y, z) != 0)) {
+				if (x == CHUNK_X - 1 || get(x + 1, y, z) == 0) {
 					vertices[i++] = byte3(x + 1, y, z);
 					vertices[i++] = byte3(x + 1, y + 1, z);
 					vertices[i++] = byte3(x + 1, y, z + 1);
@@ -97,7 +103,7 @@ void Chunk::update()
 				}
 
 				//negative y
-				if (!(y > 0 && get(x, y - 1, z) != 0)) {
+				if (y == 0 || get(x, y - 1, z) == 0) {
 					vertices[i++] = byte3(x, y, z);
 					vertices[i++] = byte3(x + 1, y, z);
 					vertices[i++] = byte3(x, y, z + 1);
@@ -109,7 +115,7 @@ void Chunk::update()
 				}
 
 				//positive y
-				if (!(y < CHUNK_Y - 1 && get(x, y + 1, z) != 0)) {
+				if (y == CHUNK_Y - 1 || get(x, y + 1, z) == 0) {
 					vertices[i++] = byte3(x + 1, y + 1, z);
 					vertices[i++] = byte3(x, y + 1, z);
 					vertices[i++] = byte3(x + 1, y + 1, z + 1);
@@ -121,7 +127,7 @@ void Chunk::update()
 				}
 				
 				//negative z
-				if (!(z > 0 && get(x, y, z - 1) != 0)) {
+				if (z == 0 || get(x, y, z - 1) == 0) {
 					vertices[i++] = byte3(x + 1, y + 1, z);
 					vertices[i++] = byte3(x + 1, y, z);
 					vertices[i++] = byte3(x, y + 1, z);
@@ -133,7 +139,7 @@ void Chunk::update()
 				}
 
 				//positive z
-				if (!(z < CHUNK_Z - 1 && get(x, y, z + 1) != 0)) {
+				if (z == CHUNK_Z - 1 || get(x, y, z + 1) == 0) {
 					vertices[i++] = byte3(x, y + 1, z + 1);
 					vertices[i++] = byte3(x, y, z + 1);
 					vertices[i++] = byte3(x + 1, y + 1, z + 1);
@@ -204,8 +210,13 @@ void Chunk::render(Camera * camera)
 
 	shader.use();
 
-	glm::mat4 trans = camera->getProjectionMatrix() * camera->getViewMatrix() * glm::mat4(1); //model;
+	glm::mat4 trans = camera->getProjectionMatrix() * camera->getViewMatrix() * model_matrix;
 	shader.setMat4("transform", trans);
 
 	glDrawArrays(GL_TRIANGLES, 0, numVertices);
+}
+
+void Chunk::setModelMatrix(glm::mat4 model_matrix)
+{
+	this->model_matrix = model_matrix;
 }

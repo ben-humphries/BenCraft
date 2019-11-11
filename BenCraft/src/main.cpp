@@ -13,7 +13,7 @@
 
 #include "Camera.h"
 #include "Skybox.h"
-#include "Chunk.h"
+#include "World.h"
 #include "TextureAtlas.h"
 
 #define WINDOW_WIDTH 1200
@@ -73,7 +73,7 @@ int main()
 	sf::Clock clock;
 
 	//TEMP VARIABLES
-	Chunk testChunk = Chunk();
+	World world = World();
 	TextureAtlas textureAtlas; //move this to a world/terrain class eventually?
 	///////////
 	//TEMP INITIALIZATIONS
@@ -81,12 +81,23 @@ int main()
 		for (int y = 0; y < 64; y++) {
 			for (int z = 0; z < 64; z++) {
 				if (x > 6 && z > 14)
-					testChunk.set(x, y, z, 3);
-				else
-					testChunk.set(x, y, z, 1);
+					world.set(x, y, z, 3);
+				//else
+					//world.set(x, y, z, 1);
 			}
 		}
 	}
+
+	for (int x = 64; x < 128; x++) {
+		for (int y = 0; y < 64; y++) {
+			for (int z = 0; z < 64; z++) {
+				world.set(x, y, z, 2);
+			}
+		}
+	}
+
+	world.set(0, 0, 0, 4);
+	world.set(-1, 0, 0, 4);
 	textureAtlas.load("res/textures/TextureAtlas.png");
 	///////////
 
@@ -139,7 +150,10 @@ int main()
 		}
 
 		skybox.render(camera);
-		testChunk.render(camera);
+		world.render(camera);
+
+		glm::vec3 cameraPos = camera->getPosition();
+		printf("Camera Pos: x = %f, y = %f, z = %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
 
 		window.display();
 	}
