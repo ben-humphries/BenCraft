@@ -47,7 +47,7 @@ void Chunk::update()
 
 	//create the mesh and assign textures
 	byte3 * vertices = new byte3[CHUNK_X * CHUNK_Y * CHUNK_Z * 6 * 6]; //6 faces and 6 vertices per face (2 triangles)
-	byte2 * texCoords = new byte2[CHUNK_X * CHUNK_Y * CHUNK_Z * 6 * 6 * 2];
+	float2 * texCoords = new float2[CHUNK_X * CHUNK_Y * CHUNK_Z * 6 * 6 * 2];
 
 	int i = 0;
 	int j = 0;
@@ -151,12 +151,12 @@ void Chunk::update()
 				//TODO: make this such that you can have different textures for each block face.
 				for (int a = 0; a < faces; a++) {
 					
-					texCoords[j++] = byte2((0.0f + offset_x) / TEXTURE_ATLAS_SIZE, (1.0f + offset_y) / TEXTURE_ATLAS_SIZE);
-					texCoords[j++] = byte2((1.0f + offset_x) / TEXTURE_ATLAS_SIZE, (1.0f + offset_y) / TEXTURE_ATLAS_SIZE);
-					texCoords[j++] = byte2((0.0f + offset_x) / TEXTURE_ATLAS_SIZE, (0.0f + offset_y) / TEXTURE_ATLAS_SIZE);
-					texCoords[j++] = byte2((0.0f + offset_x) / TEXTURE_ATLAS_SIZE, (0.0f + offset_y) / TEXTURE_ATLAS_SIZE);
-					texCoords[j++] = byte2((1.0f + offset_x) / TEXTURE_ATLAS_SIZE, (1.0f + offset_y) / TEXTURE_ATLAS_SIZE);
-					texCoords[j++] = byte2((1.0f + offset_x) / TEXTURE_ATLAS_SIZE, (0.0f + offset_y) / TEXTURE_ATLAS_SIZE);
+					texCoords[j++] = float2((0.0f + offset_x) / TEXTURE_ATLAS_SIZE, (1.0f + offset_y) / TEXTURE_ATLAS_SIZE);
+					texCoords[j++] = float2((1.0f + offset_x) / TEXTURE_ATLAS_SIZE, (1.0f + offset_y) / TEXTURE_ATLAS_SIZE);
+					texCoords[j++] = float2((0.0f + offset_x) / TEXTURE_ATLAS_SIZE, (0.0f + offset_y) / TEXTURE_ATLAS_SIZE);
+					texCoords[j++] = float2((0.0f + offset_x) / TEXTURE_ATLAS_SIZE, (0.0f + offset_y) / TEXTURE_ATLAS_SIZE);
+					texCoords[j++] = float2((1.0f + offset_x) / TEXTURE_ATLAS_SIZE, (1.0f + offset_y) / TEXTURE_ATLAS_SIZE);
+					texCoords[j++] = float2((1.0f + offset_x) / TEXTURE_ATLAS_SIZE, (0.0f + offset_y) / TEXTURE_ATLAS_SIZE);
 				}
 			}
 		}	

@@ -14,7 +14,7 @@
 typedef uint8_t blocktype;
 typedef glm::tvec3<uint8_t> byte3; //This limits the maximum chunk size in any direction to 256, as only integers -128..127 can be represented with 8 bits
 								   //This also may only actually be 128 if the hardware/compiler doesn't support unsigned ints
-typedef glm::tvec2<float> byte2;
+typedef glm::tvec2<float> float2;
 
 class Chunk
 {
