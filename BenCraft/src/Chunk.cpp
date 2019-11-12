@@ -52,7 +52,6 @@ void Chunk::update()
 	changed = false;
 
 	//create the mesh and assign textures
-	//TODO: maybe make this a vector? reduce memory usage
 	byte3 * vertices = new byte3[CHUNK_X * CHUNK_Y * CHUNK_Z * 6 * 6]; //6 faces and 6 vertices per face (2 triangles)
 	float2 * texCoords = new float2[CHUNK_X * CHUNK_Y * CHUNK_Z * 6 * 6 * 2];
 
@@ -190,6 +189,7 @@ void Chunk::update()
 	glEnableVertexAttribArray(1);
 
 	delete[] vertices;
+	delete[] texCoords;
 }
 
 void Chunk::render(Camera * camera)
