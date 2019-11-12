@@ -38,12 +38,12 @@ Chunk::~Chunk()
 
 blocktype Chunk::get(int x, int y, int z)
 {
-	return blocks[x + CHUNK_X * (y + CHUNK_Z * z)];
+	return blocks[x + CHUNK_X * (y + CHUNK_Y * z)];
 }
 
 void Chunk::set(int x, int y, int z, blocktype type)
 {
-	blocks[x + CHUNK_X * (y + CHUNK_Z * z)] = type;
+	blocks[x + CHUNK_X * (y + CHUNK_Y * z)] = type;
 	changed = true;
 }
 
@@ -52,6 +52,7 @@ void Chunk::update()
 	changed = false;
 
 	//create the mesh and assign textures
+	//TODO: maybe make this a vector? reduce memory usage
 	byte3 * vertices = new byte3[CHUNK_X * CHUNK_Y * CHUNK_Z * 6 * 6]; //6 faces and 6 vertices per face (2 triangles)
 	float2 * texCoords = new float2[CHUNK_X * CHUNK_Y * CHUNK_Z * 6 * 6 * 2];
 

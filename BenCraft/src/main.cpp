@@ -82,8 +82,8 @@ int main()
 			for (int z = 0; z < 64; z++) {
 				if (x > 6 && z > 14)
 					world.set(x, y, z, 3);
-				//else
-					//world.set(x, y, z, 1);
+				else
+					world.set(x, y, z, 1);
 			}
 		}
 	}
@@ -92,6 +92,14 @@ int main()
 		for (int y = 0; y < 64; y++) {
 			for (int z = 0; z < 64; z++) {
 				world.set(x, y, z, 2);
+			}
+		}
+	}
+
+	for (int x = -128; x < 0; x++) {
+		for (int y = -32; y < 32; y++) {
+			for (int z = -64; z < 64; z++) {
+				world.set(x, y, z, 3);
 			}
 		}
 	}
@@ -153,7 +161,7 @@ int main()
 		world.render(camera);
 
 		glm::vec3 cameraPos = camera->getPosition();
-		printf("Camera Pos: x = %f, y = %f, z = %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
+		//printf("Camera Pos: x = %f, y = %f, z = %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
 
 		window.display();
 	}

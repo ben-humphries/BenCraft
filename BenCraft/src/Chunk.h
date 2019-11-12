@@ -7,7 +7,7 @@
 
 #define CHUNK_X 16
 #define CHUNK_Y 16
-#define CHUNK_Z 16
+#define CHUNK_Z 64
 
 #define TEXTURE_ATLAS_SIZE 10
 
