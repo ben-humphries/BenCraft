@@ -4,10 +4,11 @@
 
 #include "Shader.h"
 #include "Camera.h"
+#include "Vec3Compare.h"
 
 #define CHUNK_X 16
 #define CHUNK_Y 16
-#define CHUNK_Z 64
+#define CHUNK_Z 16
 
 #define TEXTURE_ATLAS_SIZE 10
 
@@ -19,20 +20,19 @@ typedef glm::tvec2<float> float2;
 class Chunk
 {
 public:
-	Chunk();
+	Chunk(int cx, int cy, int cz);
 	~Chunk();
 
 	blocktype get(int x, int y, int z);
 	void set(int x, int y, int z, blocktype type);
 
-	void update();
-	void render(Camera * camera);
-
-	void setModelMatrix(glm::mat4 model_matrix);
+	void update(std::map<glm::ivec3, Chunk *, Vec3Compare> * chunks);
+	void render(Camera * camera, std::map<glm::ivec3, Chunk *, Vec3Compare> * chunks);
 
 private:
 	blocktype * blocks;
 
+	glm::vec3 chunkPos;
 	glm::mat4 model_matrix;
 
 	//Class-wide

@@ -55,7 +55,7 @@ void World::set(int x, int y, int z, blocktype type)
 	}
 
 	if (chunks.find(glm::ivec3(cx, cy, cz)) == chunks.end()) {
-		chunks[glm::ivec3(cx, cy, cz)] = new Chunk();
+		chunks[glm::ivec3(cx, cy, cz)] = new Chunk(cx, cy, cz);
 	}
 
 	chunks[glm::ivec3(cx, cy, cz)]->set(bx, by, bz, type);
@@ -65,7 +65,6 @@ void World::render(Camera * camera)
 {
 	std::map<glm::ivec3, Chunk *, Vec3Compare>::iterator it;
 	for (it = chunks.begin(); it != chunks.end(); it++) {
-		it->second->setModelMatrix(glm::translate(glm::mat4(1), glm::vec3(it->first.x * CHUNK_X, it->first.y * CHUNK_Y, it->first.z * CHUNK_Z)));
-		it->second->render(camera);
+		it->second->render(camera, &chunks);
 	}
 }

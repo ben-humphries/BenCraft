@@ -1,6 +1,6 @@
 #include "Chunk.h"
 
-Chunk::Chunk()
+Chunk::Chunk(int cx, int cy, int cz)
 {
 	blocks = new blocktype[CHUNK_X * CHUNK_Y * CHUNK_Z];
 
@@ -21,6 +21,11 @@ Chunk::Chunk()
 
 	shader = Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 
+	this->chunkPos.x = cx;
+	this->chunkPos.y = cy;
+	this->chunkPos.z = cz;
+
+	model_matrix = glm::translate(glm::mat4(1), glm::vec3(chunkPos.x * CHUNK_X, chunkPos.y * CHUNK_Y, chunkPos.z * CHUNK_Z));
 }
 
 
@@ -47,7 +52,7 @@ void Chunk::set(int x, int y, int z, blocktype type)
 	changed = true;
 }
 
-void Chunk::update()
+void Chunk::update(std::map<glm::ivec3, Chunk *, Vec3Compare> * chunks)
 {
 	changed = false;
 
@@ -78,8 +83,85 @@ void Chunk::update()
 				//to track how many texture coords to add.
 				int faces = 0;
 
+				//Determine which block faces to draw based on adjacent blocks
+				bool draw_negative_x = true;
+				bool draw_positive_x = true;
+				bool draw_negative_y = true;
+				bool draw_positive_y = true;
+				bool draw_negative_z = true;
+				bool draw_positive_z = true;
+
 				//negative x
-				if (x == 0 || get(x - 1, y, z) == 0) { //TODO: check for chunk edges
+				if (x == 0) { // chunk edge
+					if (chunks->find(glm::ivec3(chunkPos.x - 1, chunkPos.y, chunkPos.z)) != chunks->end() && //if a chunk at that chunk position exists
+						(*chunks)[glm::ivec3(chunkPos.x - 1, chunkPos.y, chunkPos.z)]->get(CHUNK_X - 1, y, z) != 0) { //and the adjacent block isn't air
+						draw_negative_x = false;
+					}
+				}
+				else if (get(x - 1, y, z) != 0) {
+					draw_negative_x = false;
+				}
+
+				//positive x
+				if (x == CHUNK_X - 1) { // chunk edge
+					if (chunks->find(glm::ivec3(chunkPos.x + 1, chunkPos.y, chunkPos.z)) != chunks->end() && //if a chunk at that chunk position exists
+						(*chunks)[glm::ivec3(chunkPos.x + 1, chunkPos.y, chunkPos.z)]->get(0, y, z) != 0) { //and the adjacent block isn't air
+						draw_positive_x = false;
+					}
+				}
+				else if (get(x + 1, y, z) != 0) {
+					draw_positive_x = false;
+				}
+
+				//negative y
+				if (y == 0) { // chunk edge
+					if (chunks->find(glm::ivec3(chunkPos.x, chunkPos.y - 1, chunkPos.z)) != chunks->end() && //if a chunk at that chunk position exists
+						(*chunks)[glm::ivec3(chunkPos.x, chunkPos.y - 1, chunkPos.z)]->get(x, CHUNK_Y - 1, z) != 0) { //and the adjacent block isn't air
+						draw_negative_y = false;
+					}
+				}
+				else if (get(x, y - 1, z) != 0) {
+					draw_negative_y = false;
+				}
+
+				//positive y
+				if (y == CHUNK_Y - 1) { // chunk edge
+					if (chunks->find(glm::ivec3(chunkPos.x, chunkPos.y + 1, chunkPos.z)) != chunks->end() && //if a chunk at that chunk position exists
+						(*chunks)[glm::ivec3(chunkPos.x, chunkPos.y + 1, chunkPos.z)]->get(x, 0, z) != 0) { //and the adjacent block isn't air
+						draw_positive_y = false;
+					}
+				}
+				else if (get(x, y + 1, z) != 0) {
+					draw_positive_y = false;
+				}
+
+				//negative z
+				if (z == 0) { // chunk edge
+					if (chunks->find(glm::ivec3(chunkPos.x, chunkPos.y, chunkPos.z - 1)) != chunks->end() && //if a chunk at that chunk position exists
+						(*chunks)[glm::ivec3(chunkPos.x, chunkPos.y, chunkPos.z - 1)]->get(x, y, CHUNK_Z - 1) != 0) { //and the adjacent block isn't air
+						draw_negative_z = false;
+					}
+				}
+				else if (get(x, y, z - 1) != 0) {
+					draw_negative_z = false;
+				}
+
+				//positive z
+				if (z == CHUNK_Z - 1) { // chunk edge
+					if (chunks->find(glm::ivec3(chunkPos.x, chunkPos.y, chunkPos.z + 1)) != chunks->end() && //if a chunk at that chunk position exists
+						(*chunks)[glm::ivec3(chunkPos.x, chunkPos.y, chunkPos.z + 1)]->get(x, y, 0) != 0) { //and the adjacent block isn't air
+						draw_positive_z = false;
+					}
+				}
+				else if (get(x, y, z + 1) != 0) {
+					draw_positive_z = false;
+				}
+					
+
+				//Add vertices to mesh, if the face should be drawn
+				
+				//negative x
+				if (draw_negative_x) {
 					vertices[i++] = byte3(x, y + 1, z);
 					vertices[i++] = byte3(x, y, z);
 					vertices[i++] = byte3(x, y + 1, z + 1);
@@ -91,7 +173,7 @@ void Chunk::update()
 				}
 
 				//positive x
-				if (x == CHUNK_X - 1 || get(x + 1, y, z) == 0) {
+				if (draw_positive_x) {
 					vertices[i++] = byte3(x + 1, y, z);
 					vertices[i++] = byte3(x + 1, y + 1, z);
 					vertices[i++] = byte3(x + 1, y, z + 1);
@@ -103,7 +185,7 @@ void Chunk::update()
 				}
 
 				//negative y
-				if (y == 0 || get(x, y - 1, z) == 0) {
+				if (draw_negative_y) {
 					vertices[i++] = byte3(x, y, z);
 					vertices[i++] = byte3(x + 1, y, z);
 					vertices[i++] = byte3(x, y, z + 1);
@@ -115,7 +197,7 @@ void Chunk::update()
 				}
 
 				//positive y
-				if (y == CHUNK_Y - 1 || get(x, y + 1, z) == 0) {
+				if (draw_positive_y) {
 					vertices[i++] = byte3(x + 1, y + 1, z);
 					vertices[i++] = byte3(x, y + 1, z);
 					vertices[i++] = byte3(x + 1, y + 1, z + 1);
@@ -127,7 +209,7 @@ void Chunk::update()
 				}
 				
 				//negative z
-				if (z == 0 || get(x, y, z - 1) == 0) {
+				if (draw_negative_z) {
 					vertices[i++] = byte3(x + 1, y + 1, z);
 					vertices[i++] = byte3(x + 1, y, z);
 					vertices[i++] = byte3(x, y + 1, z);
@@ -139,7 +221,7 @@ void Chunk::update()
 				}
 
 				//positive z
-				if (z == CHUNK_Z - 1 || get(x, y, z + 1) == 0) {
+				if (draw_positive_z) {
 					vertices[i++] = byte3(x, y + 1, z + 1);
 					vertices[i++] = byte3(x, y, z + 1);
 					vertices[i++] = byte3(x + 1, y + 1, z + 1);
@@ -192,17 +274,16 @@ void Chunk::update()
 	delete[] texCoords;
 }
 
-void Chunk::render(Camera * camera)
+void Chunk::render(Camera * camera, std::map<glm::ivec3, Chunk *, Vec3Compare> * chunks)
 {
 	if (changed)
-		update();
+		update(chunks);
 
 	//empty chunk
 	if (numVertices == 0)
 		return;
 
 	//render the mesh
-	//Fix culling. Probably has to do with the vertex order above.
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 
@@ -215,9 +296,4 @@ void Chunk::render(Camera * camera)
 	shader.setMat4("transform", trans);
 
 	glDrawArrays(GL_TRIANGLES, 0, numVertices);
-}
-
-void Chunk::setModelMatrix(glm::mat4 model_matrix)
-{
-	this->model_matrix = model_matrix;
 }

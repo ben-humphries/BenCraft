@@ -148,6 +148,7 @@
     <ClInclude Include="src\Util\Shader.h" />
     <ClInclude Include="src\Util\Skybox.h" />
     <ClInclude Include="src\Util\TextureAtlas.h" />
+    <ClInclude Include="src\Util\Vec3Compare.h" />
     <ClInclude Include="src\World.h" />
   </ItemGroup>
   <ItemGroup>
