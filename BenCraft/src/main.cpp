@@ -77,7 +77,7 @@ int main()
 	TextureAtlas textureAtlas; //move this to a world/terrain class eventually?
 	///////////
 	//TEMP INITIALIZATIONS
-	for (int x = 0; x < 64; x++) {
+	/*for (int x = 0; x < 64; x++) {
 		for (int y = 0; y < 64; y++) {
 			for (int z = 0; z < 64; z++) {
 				if (x > 6 && z > 14)
@@ -102,10 +102,12 @@ int main()
 				world.set(x, y, z, 3);
 			}
 		}
-	}
+	}*/
 
 	world.set(0, 0, 0, 4);
-	world.set(-1, 0, 0, 4);
+	world.set(1, 0, 0, 2);
+	world.set(0, 1, 0, 3);
+	world.set(0, 0, 1, 4);
 	textureAtlas.load("res/textures/TextureAtlas.png");
 	///////////
 
