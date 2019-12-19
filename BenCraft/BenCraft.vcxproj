@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="src\Chunk.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Util\gltext.h" />
     <ClInclude Include="src\Util\PerlinNoise.hpp" />
     <ClInclude Include="src\Util\Shader.h" />
     <ClInclude Include="src\Util\Skybox.h" />

@@ -16,15 +16,21 @@
 #include "World.h"
 #include "TextureAtlas.h"
 
+#define GLT_IMPLEMENTATION
+#include "gltext.h"
+
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 900
 
-void processInput(sf::Window &window, float dt);
+void processInput(sf::RenderWindow &window, float dt);
+void drawDebugText(sf::RenderWindow &window, Camera * camera, float fps);
 
 //Global variables
 sf::ContextSettings settings;
 //window is declared in main once the context settings are initialized.
 Camera * camera;
+
+
 
 int main()
 {
@@ -33,7 +39,7 @@ int main()
 	settings.majorVersion = 3;
 	settings.minorVersion = 3;
 
-	sf::Window window;
+	sf::RenderWindow window;
 	window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "BenCraft", sf::Style::Default, settings);
 	window.setVerticalSyncEnabled(true);
 	window.setMouseCursorVisible(false);
@@ -45,6 +51,8 @@ int main()
 	//initialize glew (after setting the OpenGL context)
 	glewExperimental = GL_TRUE;
 	glewInit();
+
+	gltInit();
 
 	Skybox skybox;
 
@@ -71,38 +79,11 @@ int main()
 	bool running = true;
 	bool wireframe = false;
 	sf::Clock clock;
+	float fps = 0.0f;
 
 	//TEMP VARIABLES
 	World world = World();
 	TextureAtlas textureAtlas; //move this to a world/terrain class eventually?
-	///////////
-	//TEMP INITIALIZATIONS
-	/*for (int x = 0; x < 64; x++) {
-		for (int y = 0; y < 64; y++) {
-			for (int z = 0; z < 64; z++) {
-				if (x > 6 && z > 14)
-					world.set(x, y, z, 3);
-				else
-					world.set(x, y, z, 1);
-			}
-		}
-	}
-
-	for (int x = 64; x < 128; x++) {
-		for (int y = 0; y < 64; y++) {
-			for (int z = 0; z < 64; z++) {
-				world.set(x, y, z, 2);
-			}
-		}
-	}
-
-	for (int x = -128; x < 0; x++) {
-		for (int y = -32; y < 32; y++) {
-			for (int z = -64; z < 64; z++) {
-				world.set(x, y, z, 3);
-			}
-		}
-	}*/
 
 	world.set(0, 0, 0, 4);
 	world.set(1, 0, 0, 2);
@@ -151,6 +132,9 @@ int main()
 
 		float dt = clock.getElapsedTime().asSeconds();
 		elapsedTime += dt;
+
+		if (fmod(elapsedTime, 1.0f) <= 0.1)
+			fps = 1 / dt;
 		clock.restart();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -162,8 +146,7 @@ int main()
 		skybox.render(camera);
 		world.render(camera);
 
-		glm::vec3 cameraPos = camera->getPosition();
-		//printf("Camera Pos: x = %f, y = %f, z = %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
+		drawDebugText(window, camera, fps);
 
 		window.display();
 	}
@@ -173,7 +156,7 @@ int main()
 }
 
 
-void processInput(sf::Window &window, float dt) {
+void processInput(sf::RenderWindow &window, float dt) {
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 		camera->fpKeyboardMove(FORWARD, dt);
@@ -201,4 +184,35 @@ void processInput(sf::Window &window, float dt) {
 	sf::Vector2i currentPos = sf::Mouse::getPosition() - centerScreen;
 	camera->fpMouseMove(currentPos.x, -currentPos.y);
 	sf::Mouse::setPosition(centerScreen);
+}
+
+void drawDebugText(sf::RenderWindow &window, Camera * camera, float fps) {
+
+
+	char text_string1[128];
+	snprintf(text_string1, sizeof(text_string1), "Position:\n  x = %f\n  y = %f\n  z = %f", camera->getPosition().x, camera->getPosition().y, camera->getPosition().z);
+	
+	char text_string2[10];
+	snprintf(text_string2, sizeof(text_string2), "FPS: %f", fps);
+
+
+	window.pushGLStates();
+
+	GLTtext * text1 = gltCreateText();
+	gltSetText(text1, text_string1);
+
+	GLTtext * text2 = gltCreateText();
+	gltSetText(text2, text_string2);
+
+	gltBeginDraw();
+	gltColor(1.0f, 1.0f, 1.0f, 1.0f);
+	gltDrawText2D(text1, 0.0f, 0.0f, 2.0f);
+	gltDrawText2D(text2, WINDOW_WIDTH - 150.0f, 0.0f, 2.0f);
+
+
+	gltEndDraw();
+	gltDeleteText(text1);
+	gltDeleteText(text2);
+
+	window.popGLStates();
 }
